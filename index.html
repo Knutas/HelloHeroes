@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Hello Heroes</title>
+	<style>
+		#heroes thead th::after {
+			content: '↕';
+			font-size: small;
+			vertical-align: top;
+			color: lightGrey;
+		}
+		#heroes thead th.up::after  {
+			content: '↑';
+		}
+		#heroes thead th.down::after  {
+			content: '↓';
+		}
+		#heroes tbody td {
+			padding: 0 5px 0 5px;
+		}
+		#heroes tbody td:nth-of-type(1), #heroes tbody td:nth-of-type(6), #heroes tbody td:nth-of-type(7), #heroes tbody td:nth-of-type(8), #heroes tbody td:nth-of-type(9) {
+			text-align: right;
+		}
+		#heroes tbody td:nth-of-type(3) {
+			text-align: center;
+		}
+	</style>
+	<script>
+	Array.prototype.mergeSort = function (comparator) {
+		var i, j, k,
+				firstHalf,
+				secondHalf,
+				arr1,
+				arr2;
+
+		var defaultComparator = function (a, b) {
+			if (a < b) {
+				return -1;
+			}
+			return 1;
+		}
+
+		if ( !comparator ) { comparator = defaultComparator; }
+
+		if (this.length > 1) {
+			firstHalf = Math.floor(this.length / 2);
+			secondHalf = this.length - firstHalf;
+			arr1 = [];
+			arr2 = [];
+
+			for (i = 0; i < firstHalf; i++) {
+				arr1[i] = this[i];
+			}
+
+			for(i = firstHalf; i < firstHalf + secondHalf; i++) {
+				arr2[i - firstHalf] = this[i];
+			}
+
+			arr1.mergeSort(comparator);
+			arr2.mergeSort(comparator);
+
+			i=j=k=0;
+
+			while (arr1.length != j && arr2.length != k) {
+				if ( comparator( arr1[j], arr2[k] ) <= 0 ) {
+					this[i] = arr1[j];
+					i++;
+					j++;
+				}
+				else {
+					this[i] = arr2[k];
+					i++;
+					k++;
+				}
+			}
+
+			while (arr1.length != j) {
+				this[i] = arr1[j];
+				i++;
+				j++;
+			}
+
+			while (arr2.length != k) {
+				this[i] = arr2[k];
+				i++;
+				k++;
+			}
+		}
+	}
+	</script>
+	<script>
+var heroTable = (function() {
+	"use strict";
+	var types = {tank: "Tanker", dealer: "Dealer", hybrid: "Hybrid", support: "Support"};
+	var areas = {armon: "The Armon Guards", forest: "Red Mushroom Forest", desert: "Desert of Sandstorm", farm: "Sweet Cookie Farm", sea: "Deep Sea Ravine", thornland: "Wondrous Thornland", base: "Abandoned Advance Base", keronic: "Keronic Base", village: "Ghostly Pumpkin Village", event: "Event Hero"};
+
+	var heroes = [
+{name: "Harold", grade: 2, type: types.tank, area: areas.armon, att: 111, def: 116, hp: 678, dex: 10, skills: [{name: "Slash The Sky", cooldown: 20, damage: 130}, {name: "Defense mode", cooldown: 48, effect: "def", amount: 40, turns: 2}]},
+{name: "General Harold", grade: 5, type: types.tank, area: areas.armon, att: 237, def: 246, hp: 1044, dex: 16, skills: [{name: "Chill Wave", cooldown: 84, damage: 160, effect: "freeze", turns: 3}, {name: "Defense mode", cooldown: 96, effect: "focus", amount: 80, turns: 2, aoe: true}]},
+{name: "Eric", grade: 4, type: types.tank, area: areas.armon, att: 195, def: 240, hp: 780, dex: 14, skills: [{name: "Sword Storm", cooldown: 55, damage: 170}, {name: "Defense mode", cooldown: 60, effect: "def", amount: 50, turns: 2}]},
+{name: "General Eric", grade: 6, type: types.tank, area: areas.armon, att: 299, def: 330, hp: 1121, dex: 20, skills: [{name: "Storm Blade", cooldown: 78, damage: 200, effect: "stun", turns: 3}, {name: "Defense mode", cooldown: 96, effect: "focus", amount: 90, turns: 3, aoe: true}]},
+{name: "Ophelia", grade: 1, type: types.support, area: areas.armon, att: 69, def: 52, hp: 342, dex: 9, skills: [{name: "Healing Light", cooldown: 20, heal: 148}]},
+{name: "Amelia", grade: 3, type: types.support, area: areas.armon, att: 153, def: 115, hp: 492, dex: 12, skills: [{name: "Healing Light", cooldown: 24, heal: 186}, {name: "Blessing of Edel", cooldown: 72, effect: "remove", negative: false}]},
+{name: "Rebecca", grade: 6, type: types.support, area: areas.armon, att: 239, def: 184, hp: 628, dex: 16, skills: [{name: "Origin of Light", cooldown: 54, heal: 173, aoe: true}, {name: "Blessing of Edel", cooldown: 360, revive: true, heal: "30%", aoe: true}]},
+{name: "Aaron Bridgnorth", grade: 1, type: types.dealer, area: areas.armon, att: 129, def: 52, hp: 342, dex: 10, skills: [{name: "Shooting Fireball", cooldown: 45, damage: 45, effect: "stun", turns: 2}]},
+{name: "Robin Nottingham", grade: 3, type: types.dealer, area: areas.armon, att: 252, def: 87, hp: 369, dex: 18, skills: [{name: "High-Angle Fire", cooldown: 55, damage: 170}, {name: "Chilling Shot", cooldown: 72, damage: 60, effect: "freeze", turns: 2}]},
+{name: "William Burglen", grade: 4, type: types.dealer, area: areas.armon, att: 321, def: 110, hp: 425, dex: 20, skills: [{name: "Ceaseless Shooting", cooldown: 60, damage: 180}, {name: "Chilling Shot", cooldown: 78, damage: 80, effect: "freeze", turns: 2}]},
+{name: "Apollon", grade: 6, type: types.dealer, area: areas.armon, att: 599, def: 211, hp: 718, dex: 22, skills: [{name: "Raining Arrows", cooldown: 92, damage: 55, effect: "stun", change: 10, turns: 2, aoe: true}, {name: "Power of the Sun", cooldown: 120, heal: "50%", self: true, effect: "dex", amount: 60, turns: 3}]},
+{name: "Sophia", grade: 2, type: types.dealer, area: areas.armon, att: 224, def: 95, hp: 469, dex: 12, skills: [{name: "Meteor", cooldown: 69, damage: 60, aoe: true}, {name: "Spellbook", cooldown: 60, effect: "att", amount: 50, turns: 2}]},
+{name: "Isis", grade: 3, type: types.dealer, area: areas.armon, att: 285, def: 115, hp: 492, dex: 14, skills: [{name: "Meteor", cooldown: 74, damage: 70, aoe: true}, {name: "Spellbook", cooldown: 60, effect: "att", amount: 60, turns: 2}]},
+{name: "Sorceress Sophia", grade: 4, type: types.dealer, area: areas.armon, att: 349, def: 138, hp: 531, dex: 16, skills: [{name: "Squeak", cooldown: 88, damage: 70, effect: "freeze", chance: 5, turns: 2, aoe: true}, {name: "Spellbook", cooldown: 60, effect: "att", amount: 55, turns: 2}]},
+{name: "Sorceress Isis", grade: 5, type: types.dealer, area: areas.armon, att: 424, def: 168, hp: 603, dex: 18, skills: [{name: "Clap of Thunder", cooldown: 88, damage: 70, effect: "stun", chance: 5, turns: 2, aoe: true}, {name: "Spellbook", cooldown: 60, effect: "att", amount: 60, turns: 2}]},
+{name: "Sorceress Sally", grade: 6, type: types.dealer, area: areas.armon, att: 479, def: 184, hp: 628, dex: 20, skills: [{name: "Clap of Thunder", cooldown: 88, damage: 70, effect: "stun", chance: 5, turns: 2, aoe: true}, {name: "Squeak", cooldown: 102, damage: 70, effect: "freeze", chance: 10, turns: 2, aoe: true}]},
+{name: "Marine Jimmy", grade: 5, type: types.dealer, area: areas.armon, att: 407, def: 157, hp: 562, dex: 25, skills: [{name: "9 mm Bullet", cooldown: 64, damage: 190}, {name: "Smoke Bomb", cooldown: 78, damage: 50, effect: "blind", chance: 20, turns: 2, aoe: true}]},
+{name: "Marine Brian", grade: 6, type: types.dealer, area: areas.armon, att: 479, def: 184, hp: 628, dex: 28, skills: [{name: "45 ACP", cooldown: 69, damage: 200}, {name: "Smoke Bomb", cooldown: 84, damage: 50, effect: "blind", turns: 2, aoe: true}]},
+{name: "Sir Ribbit", grade: 2, type: types.dealer, area: areas.armon, att: 207, def: 84, hp: 417, dex: 12, skills: [{name: "Croak Croak", cooldown: 36, damage: 50, effect: "silence", turns: 2}, {name: "Na na nah", cooldown: 72, effect: "def", negative: true, amount: 30, turns: 2, aoe: true}]},
+{name: "Sir Croaker", grade: 3, type: types.dealer, area: areas.armon, att: 285, def: 115, hp: 492, dex: 14, skills: [{name: "Croak Croak", cooldown: 42, damage: 60, effect: "silence", turns: 2}, {name: "Na na nah", cooldown: 84, effect: "def", negative: true, amount: 40, turns: 2, aoe: true}]},
+{name: "Lady June", grade: 3, type: types.support, area: areas.armon, att: 131, def: 101, hp: 430, dex: 11, skills: [{name: "Amazing Skill", cooldown: 60, effect: "remove", negative: true}, {name: "Blow Kiss", cooldown: 72, effect: "att", negative: true, amount: 20, turns: 2, aoe: true}]},
+{name: "Lady Arom", grade: 4, type: types.support, area: areas.armon, att: 167, def: 128, hp: 496, dex: 12, skills: [{name: "Amazing Skill", cooldown: 120, effect: "remove", negative: true, aoe: true}, {name: "Blow Kiss", cooldown: 72, effect: "att", negative: true, amount: 30, turns: 2, aoe: true}]},
+{name: "King Toad", grade: 4, type: types.dealer, area: areas.armon, att: 363, def: 147, hp: 567, dex: 16, skills: [{name: "First Wa Fencing", cooldown: 57, damage: 175}, {name: "Na na nah", cooldown: 96, effect: "def", negative: true, amount: 50, turns: 2, aoe: true}]},
+{name: "Prince Frog", grade: 5, type: types.dealer, area: areas.armon, att: 441, def: 179, hp: 642, dex: 18, skills: [{name: "Second Wa Fencing", cooldown: 62, damage: 185}, {name: "Na na nah", cooldown: 96, effect: "def", negative: true, amount: 50, turns: 2, aoe: true}]},
+{name: "Rocket Lady June", grade: 5, type: types.support, area: areas.armon, att: 203, def: 157, hp: 562, dex: 14, skills: [{name: "Bewitching Pose", cooldown: 110, effect: "remove", negative: true, aoe: true}, {name: "Croak Wave", cooldown: 96, effect: "att", negative: true, amount: 45, turns: 2, aoe: true}]},
+{name: "Rocket King Toad", grade: 6, type: types.dealer, area: areas.armon, att: 499, def: 197, hp: 673, dex: 20, skills: [{name: "Discharge Rocket", cooldown: 62, damage: 185}, {name: "Call me King", cooldown: 96, effect: "def", negative: true, amount: 55, turns: 2, aoe: true}]},
+{name: "Bignose Jr.", grade: 6, type: types.hybrid, area: areas.armon, att: 400, def: 264, hp: 898, dex: 24, skills: [{name: "Overheated Snot", cooldown: 85, damage: 380, drain: 15}, {name: "Tornado", cooldown: 96, effect: "evade", amount: 80, turns: 2, aoe: true}]},
+{name: "Talisa", grade: 4, type: types.dealer, area: areas.armon, att: 321, def: 110, hp: 425, dex: 20, skills: [{name: "Wake Up", cooldown: 72, damage: 80, effect: "stun", turns: 2}, {name: "Wink", cooldown: 72, effect: "att", negative: true, amount: 30, turns: 2, aoe: true}]},
+{name: "Nikita", grade: 5, type: types.dealer, area: areas.armon, att: 407, def: 145, hp: 522, dex: 23, skills: [{name: "Wake Up", cooldown: 78, damage: 90, effect: "stun", turns: 2}, {name: "Wink", cooldown: 84, effect: "att", negative: true, amount: 40, turns: 2, aoe: true}]},
+{name: "Avril", grade: 6, type: types.dealer, area: areas.armon, att: 479, def: 184, hp: 628, dex: 26, skills: [{name: "Got a problem?", cooldown: 64, damage: 185, effect: "stun", change: 20, turns: 2}, {name: "Wink", cooldown: 90, effect: "att", negative: true, amount: 45, turns: 2, aoe: true}]},
+{name: "Calvin", grade: 4, type: types.dealer, area: areas.armon, att: 363, def: 147, hp: 567, dex: 16, skills: [{name: "Sword of Blood", cooldown: 86, damage: 175, heal: "10%", self: true}, {name: "Family Glory", cooldown: 78, damage: 90, effect: "stun", turns: 2}]},
+{name: "Lloyd", grade: 5, type: types.dealer, area: areas.armon, att: 407, def: 168, hp: 562, dex: 18, skills: [{name: "Sword of Blood", cooldown: 96, damage: 185, heal: "15%", self: true}, {name: "Family Protection", cooldown: 60, effect: "skill", turns: 2}]},
+{name: "Dylan", grade: 6, type: types.dealer, area: areas.armon, att: 519, def: 211, hp: 718, dex: 22, skills: [{name: "Sword of Blood", cooldown: 80, damage: 195, heal: "25%", self: true}, {name: "Family Honor", cooldown: 69, damage: 60, aoe: true}]},
+{name: "Swordmaiden Mina", grade: 4, type: types.dealer, area: areas.armon, att: 335, def: 120, hp: 460, dex: 22, skills: [{name: "Crescent Blade", cooldown: 70, damage: 105, turns: 2}, {name: "Moon Makeup!", cooldown: 84, effect: "att", amount: 25, turns: 2, aoe: true}]},
+{name: "Swordmaiden Lilly", grade: 5, type: types.dealer, area: areas.armon, att: 407, def: 157, hp: 562, dex: 25, skills: [{name: "Name of Justice", cooldown: 60, damage: 180}, {name: "Moonlight Fall", cooldown: 84, damage: 55, turns: 2, aoe: true}]},
+{name: "Swordmaiden Yui", grade: 6, type: types.dealer, area: areas.armon, att: 479, def: 171, hp: 582, dex: 27, skills: [{name: "Name of Justice", cooldown: 62, damage: 185}, {name: "Moon Makeup!", cooldown: 84, effect: "att", amount: 35, turns: 2, aoe: true}]},
+{name: "Ninja Sasuke", grade: 3, type: types.dealer, area: areas.armon, att: 274, def: 105, hp: 449, dex: 18, skills: [{name: "Lightning Dart", cooldown: 68, damage: 100, turns: 2}, {name: "Ninja Vanish", cooldown: 84, effect: "stealth", turns: 2}]},
+{name: "Ninja Kotaro", grade: 4, type: types.dealer, area: areas.armon, att: 349, def: 134, hp: 517, dex: 21, skills: [{name: "Shadow Thunder", cooldown: 72, damage: 65, aoe: true}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 2}]},
+{name: "Ninja Keiasu", grade: 5, type: types.dealer, area: areas.armon, att: 424, def: 163, hp: 586, dex: 24, skills: [{name: "Dark Stroke", cooldown: 64, damage: 190}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 2}]},
+{name: "Ninja Keiasu", grade: 6, type: types.dealer, area: areas.armon, att: 519, def: 197, hp: 673, dex: 28, skills: [{name: "Chaos Stroke", cooldown: 64, damage: 220, effect: "confuse", turns: 3}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 3}]},
+{name: "Teddybear Grey", grade: 4, type: types.support, area: areas.armon, att: 195, def: 147, hp: 567, dex: 14, skills: [{name: "Cheer Up!", cooldown: 66, effect: "remove"}, {name: "Me Cute", cooldown: 78, effect: "att", negative: true, amount: 35, turns: 2, aoe: true}]},
+{name: "Teddybear Sky", grade: 5, type: types.tank, area: areas.armon, att: 220, def: 258, hp: 924, dex: 18, skills: [{name: "Bad Kid!", cooldown: 96, damage: 90, effect: "target", turns: 2}, {name: "Me Cute", cooldown: 83, effect: "att", negative: true, amount: 40, turns: 2, aoe: true}]},
+{name: "Teddybear Pinky", grade: 6, type: types.hybrid, area: areas.armon, att: 383, def: 253, hp: 861, dex: 19, skills: [{name: "Aing", cooldown: 69, effect: "skill", turns: 3}, {name: "Wahoo!!", cooldown: 64, damage: 190, effect: "dex", negative: true, amount: 15, turns: 2}]},
+{name: "Chichi", grade: 4, type: types.support, area: areas.armon, att: 195, def: 147, hp: 567, dex: 14, skills: [{name: "Lucky Prayer", cooldown: 24, heal: 205}, {name: "Cat Sole", cooldown: 66, effect: "remove"}]},
+{name: "Nabi", grade: 5, type: types.dealer, area: areas.armon, att: 492, def: 168, hp: 603, dex: 17, skills: [{name: "Shut It", cooldown: 51, damage: 75, effect: "silence", turns: 2}, {name: "No Can't Do", cooldown: 62, damage: 185}]},
+{name: "Miya", grade: 6, type: types.support, area: areas.armon, att: 319, def: 237, hp: 807, dex: 27, skills: [{name: "Lucky Prayer", cooldown: 24, heal: 349}, {name: "Cat Sole", cooldown: 54, effect: "remove"}]},
+{name: "Veteran Barnes", grade: 4, type: types.dealer, area: areas.armon, att: 335, def: 120, hp: 460, dex: 20, skills: [{name: "M60 Rifle", cooldown: 67, damage: 170, effect: "def", negative: true, amount: 20, turns: 2}, {name: "Warning Shot", cooldown: 72, effect: "dex", negative: true, amount: 45, turns: 2, aoe: true}]},
+{name: "Veteran Ryan", grade: 5, type: types.dealer, area: areas.armon, att: 407, def: 145, hp: 522, dex: 23, skills: [{name: "M60 Rifle", cooldown: 67, damage: 180, effect: "def", negative: true, amount: 25, turns: 2}, {name: "Fire in the Hole", cooldown: 93, damage: 50, effect: "def", negative: true, amount: 20, turns: 2}]},
+{name: "Veteran Bo", grade: 6, type: types.dealer, area: areas.armon, att: 479, def: 184, hp: 628, dex: 26, skills: [{name: "M60 Rifle", cooldown: 67, damage: 190, effect: "def", negative: true, amount: 30, turns: 2}, {name: "Fire in the Hole", cooldown: 88, damage: 60, effect: "def", negative: true, amount: 25, turns: 2}]},
+{name: "Maid Anna", grade: 4, type: types.hybrid, area: areas.armon, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "So Dusty!", cooldown: 66, damage: 160, effect: "blind", turns: 2}, {name: "Quick Cleaning", cooldown: 66, effect: "remove", heal: "25%"}]},
+{name: "Maid Mary", grade: 5, type: types.hybrid, area: areas.armon, att: 340, def: 224, hp: 804, dex: 18, skills: [{name: "So Dusty!", cooldown: 66, damage: 180, effect: "blind", turns: 2}, {name: "Quick Cleaning", cooldown: 60, effect: "remove", heal: "25%"}]},
+{name: "Muay Thai Klahan", grade: 4, type: types.dealer, area: areas.armon, att: 335, def: 128, hp: 496, dex: 20, skills: [{name: "Gut Kick", cooldown: 66, damage: 160, effect: "bilnd", turns: 2}, {name: "Muay Thai", cooldown: 63, damage: 90, turns: 2}]},
+{name: "Muay Thai Niran", grade: 5, type: types.dealer, area: areas.armon, att: 424, def: 163, hp: 586, dex: 22, skills: [{name: "Gut Kick", cooldown: 66, damage: 180, effect: "bilnd", turns: 2}, {name: "Muay Thai", cooldown: 68, damage: 100, turns: 2}]},
+{name: "Muay Thai Khun", grade: 6, type: types.dealer, area: areas.armon, att: 519, def: 197, hp: 673, dex: 26, skills: [{name: "Gut Kick", cooldown: 78, damage: 180, effect: "stun", turns: 2}, {name: "Muay Thai", cooldown: 73, damage: 140, turns: 2}]},
+
+{name: "Baby Mushroom", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 85, hp: 556, dex: 10, skills: [{name: "Bounce Bounce", cooldown: 30, damage: 130}]},
+{name: "Uncle Mushroom", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 78, hp: 599, dex: 10, skills: [{name: "Bounce Bounce", cooldown: 30, damage: 130}]},
+{name: "Mr. Mushroom", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 92, hp: 513, dex: 10, skills: [{name: "Bounce Bounce", cooldown: 30, damage: 130}]},
+{name: "Mrs. Mushroom", grade: 2, type: types.tank, area: areas.forest, att: 128, def: 126, hp: 730, dex: 12, skills: [{name: "Bounce Bounce", cooldown: 36, damage: 130}, {name: "Spread Spore", cooldown: 36, effect: "def", amount: 30, turns: 2}]},
+{name: "Ghost Mushroom", grade: 3, type: types.hybrid, area: areas.forest, att: 220, def: 145, hp: 616, dex: 14, skills: [{name: "Bounce Bounce", cooldown: 52, damage: 165}, {name: "Burst", cooldown: 84, effect: "counter", amount: 30, turns: 2, aoe: true}]},
+{name: "Blue Seedling", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 85, hp: 556, dex: 10, skills: [{name: "Squash Ya!", cooldown: 30, damage: 130}]},
+{name: "Pink Seedling", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 78, hp: 559, dex: 10, skills: [{name: "Squash Ya!", cooldown: 30, damage: 130}]},
+{name: "Purple Seedling", grade: 1, type: types.hybrid, area: areas.forest, att: 100, def: 66, hp: 428, dex: 10, skills: [{name: "Squash Ya!", cooldown: 30, damage: 130}]},
+{name: "Green Seedling", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 92, hp: 513, dex: 10, skills: [{name: "Squash Ya!", cooldown: 30, damage: 130}]},
+{name: "Gold Seedling", grade: 2, type: types.hybrid, area: areas.forest, att: 160, def: 105, hp: 522, dex: 12, skills: [{name: "Squash Ya!", cooldown: 36, damage: 130}, {name: "Srrrrr", cooldown: 72, effect: "evade", amount: 70, turns: 2}]},
+{name: "Queen Sead", grade: 3, type: types.support, area: areas.forest, att: 153, def: 115, hp: 492, dex: 12, skills: [{name: "Boing-boing", cooldown: 36, heal: 161, turns: 2}, {name: "Magical Queen Seed Scent", cooldown: 240, revive: true, heal: "20%"}]},
+{name: "Green Artie", grade: 1, type: types.dealer, area: areas.forest, att: 129, def: 52, hp: 342, dex: 10, skills: [{name: "Poisonous Seed", cooldown: 49, damage: 80, turns: 2}]},
+{name: "Red Artie", grade: 1, type: types.dealer, area: areas.forest, att: 114, def: 38, hp: 256, dex: 13, skills: [{name: "Poisonous Seed", cooldown: 49, damage: 80, turns: 2}]},
+{name: "Turquoise Artie", grade: 2, type: types.dealer, area: areas.forest, att: 207, def: 84, hp: 417, dex: 12, skills: [{name: "Poisonous Seed", cooldown: 58, damage: 80, turns: 2}, {name: "Na na nah!", cooldown: 54, damage: 60, effect: "blind", turns: 2}]},
+{name: "Maudry", grade: 3, type: types.hybrid, area: areas.forest, att: 210, def: 139, hp: 591, dex: 13, skills: [{name: "Thorn of Destruction", cooldown: 79, damage: 45, turns: 2, aoe: true}, {name: "Thorn of Silence", cooldown: 48, damage: 70, effect: "silence", turns: 2}]},
+{name: "Enraged Maudry", grade: 4, type: types.hybrid, area: areas.forest, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "Thorn of Destruction", cooldown: 81, damage: 55, turns: 2, aoe: true}, {name: "Thorn of Silence", cooldown: 54, damage: 80, effect: "silence", turns: 2}]},
+
+{name: "Sancho", grade: 1, type: types.support, area: areas.desert, att: 69, def: 52, hp: 342, dex: 9, skills: [{name: "Accelerando", cooldown: 60, effect: "att", amount: 10, turns: 2, aoe: true}, {name: "Senorita", cooldown: 70, effect: "remove"}]},
+{name: "Pancho", grade: 2, type: types.support, area: areas.desert, att: 111, def: 84, hp: 417, dex: 10, skills: [{name: "Allegro", cooldown: 54, heal: 94, aoe: true}, {name: "Soul's Recital", cooldown: 240, revive: true, heal: "10%"}]},
+{name: "Gonzalez", grade: 4, type: types.support, area: areas.desert, att: 195, def: 147, hp: 567, dex: 14, skills: [{name: "Chikchigi Boom", cooldown: 72, effect: "dex", amount: 50, turns: 3, aoe: true}, {name: "Party Tonight", cooldown: 66, heal: 85, turns: 2, aoe: true}]},
+{name: "Fernando", grade: 5, type: types.support, area: areas.desert, att: 203, def: 157, hp: 562, dex: 14, skills: [{name: "Serenade", cooldown: 24, heal: 211}, {name: "Old Love Story", cooldown: 66, heal: 87, turns: 2, aoe: true}]},
+{name: "Arbol", grade: 1, type: types.tank, area: areas.desert, att: 69, def: 85, hp: 470, dex: 9, skills: [{name: "Bam", cooldown: 34, damage: 140}]},
+{name: "Enraged Arbol", grade: 2, type: types.tank, area: areas.desert, att: 111, def: 137, hp: 573, dex: 10, skills: [{name: "Bam", cooldown: 40, damage: 140}, {name: "Ignite!", cooldown: 36, effect: "def", amount: 30, turns: 2}]},
+{name: "Kabol", grade: 1, type: types.dealer, area: areas.desert, att: 129, def: 52, hp: 342, dex: 10, skills: [{name: "Fire Bomb", cooldown: 38, damage: 150}]},
+{name: "Enraged Kabol", grade: 2, type: types.dealer, area: areas.desert, att: 207, def: 84, hp: 417, dex: 12, skills: [{name: "Fire Bomb", cooldown: 45, damage: 150}, {name: "Tussock Moth", cooldown: 54, damage: 60, effect: "blind", turns: 2}]},
+{name: "Warrior Kobold", grade: 1, type: types.tank, area: areas.desert, att: 69, def: 78, hp: 513, dex: 10, skills: [{name: "Goblin's Cry", cooldown: 60, effect: "evade", amount: 70, turns: 2}]},
+{name: "Thief Kobold", grade: 1, type: types.dealer, area: areas.desert, att: 114, def: 38, hp: 256, dex: 13, skills: [{name: "Spinning Shuriken", cooldown: 38, damage: 150}]},
+{name: "Warrior Kabalus", grade: 2, type: types.tank, area: areas.desert, att: 111, def: 126, hp: 626, dex: 12, skills: [{name: "Moby's Hoeing", cooldown: 70, damage: 60, turns: 3}, {name: "Goblin's Cry", cooldown: 72, effect: "evade", amount: 70, turns: 2}]},
+{name: "Thief Kabalus", grade: 2, type: types.dealer, area: areas.desert, att: 183, def: 63, hp: 313, dex: 15, skills: [{name: "Spinning Shuriken", cooldown: 45, damage: 150}, {name: "Smoke Shuriken", cooldown: 72, effect: "def", negative: true, amount: 30, turns: 2, aoe: true}]},
+{name: "Spearman Gok", grade: 1, type: types.tank, area: areas.desert, att: 69, def: 71, hp: 556, dex: 9, skills: [{name: "Sparta", cooldown: 30, effect: "def", amount: 30, turns: 2}]},
+{name: "Soldier Gok", grade: 1, type: types.dealer, area: areas.desert, att: 139, def: 45, hp: 229, dex: 9, skills: [{name: "Ax Throw", cooldown: 49, damage: 80, turns: 2}]},
+{name: "Spearman Mok", grade: 2, type: types.tank, area: areas.desert, att: 111, def: 116, hp: 678, dex: 10, skills: [{name: "Sparta", cooldown: 36, effect: "def", amount: 30, turns: 2}, {name: "Pierce Heart", cooldown: 40, damage: 140}]},
+{name: "Soldier Mok", grade: 2, type: types.dealer, area: areas.desert, att: 224, def: 73, hp: 364, dex: 10, skills: [{name: "Ax Throw", cooldown: 58, damage: 80, turns: 2}, {name: "Lightin' Thunder", cooldown: 45, damage: 150}]},
+{name: "Spearman Zik", grade: 3, type: types.tank, area: areas.desert, att: 153, def: 159, hp: 800, dex: 12, skills: [{name: "Sparta", cooldown: 48, effect: "def", amount: 40, turns: 2}, {name: "Pierce Heart", cooldown: 50, damage: 160}]},
+{name: "Soldier Zik", grade: 3, type: types.dealer, area: areas.desert, att: 307, def: 101, hp: 430, dex: 12, skills: [{name: "Ax Throw", cooldown: 63, damage: 90, turns: 2}, {name: "Lightin' Thunder", cooldown: 55, damage: 170}]},
+{name: "Spearman Lak", grade: 4, type: types.tank, area: areas.desert, att: 195, def: 203, hp: 922, dex: 14, skills: [{name: "Sparta", cooldown: 96, effect: "def", amount: 30, turns: 2, aoe: true}, {name: "Pierce Heart", cooldown: 55, damage: 170}]},
+{name: "Soldier Lak", grade: 4, type: types.dealer, area: areas.desert, att: 391, def: 128, hp: 496, dex: 14, skills: [{name: "Crazy Ax", cooldown: 76, damage: 40, turns: 2, aoe: true}, {name: "Lightin' Thunder", cooldown: 60, damage: 180}]},
+{name: "Marshal Gok", grade: 5, type: types.dealer, area: areas.desert, att: 492, def: 168, hp: 603, dex: 16, skills: [{name: "Storm Ax", cooldown: 64, damage: 190}, {name: "Fatal Rage", cooldown: 84, effect: "crit", amount: 70, turns: 2}]},
+{name: "General Lak", grade: 5, type: types.dealer, area: areas.desert, att: 407, def: 145, hp: 522, dex: 23, skills: [{name: "Furious Blow", cooldown: 64, damage: 190}, {name: "Boost Morale", cooldown: 84, effect: "att", amount: 30, turns: 2, aoe: true}]},
+{name: "Major Gok", grade: 6, type: types.tank, area: areas.desert, att: 279, def: 290, hp: 1166, dex: 18, skills: [{name: "Hectopascal Spear", cooldown: 64, damage: 190, effect: "att", negative: true, amount: 10, turns: 2}, {name: "Cry of Rage", cooldown: 96, effect: "att", amount: 35, turns: 2, aoe: true}]},
+{name: "Captain Lak", grade: 6, type: types.tank, area: areas.desert, att: 279, def: 343, hp: 987, dex: 18, skills: [{name: "Hectopascal Spear", cooldown: 64, damage: 190, effect: "def", negative: true, amount: 15, turns: 2}, {name: "Battle Cry", cooldown: 96, effect: "def", amount: 75, turns: 3, aoe: true}]},
+{name: "Yoos", grade: 2, type: types.hybrid, area: areas.desert, att: 147, def: 98, hp: 484, dex: 10, skills: [{name: "Dragon's Mark", cooldown: 114, damage: 150, effect: "stun", turns: 2}, {name: "Lava Breath", cooldown: 62, damage: 45, aoe: true}]},
+{name: "Fafnir", grade: 3, type: types.hybrid, area: areas.desert, att: 203, def: 135, hp: 572, dex: 12, skills: [{name: "Dragon's Mark", cooldown: 120, damage: 160, effect: "stun", turns: 2}, {name: "Lava Breath", cooldown: 64, damage: 50, aoe: true}]},
+{name: "Nidhogg", grade: 4, type: types.hybrid, area: areas.desert, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "Dragon's Mark", cooldown: 120, damage: 170, effect: "stun", turns: 2}, {name: "Lava Breath", cooldown: 67, damage: 60, aoe: true}]},
+{name: "Tiamat", grade: 4, type: types.dealer, area: areas.desert, att: 405, def: 138, hp: 531, dex: 15, skills: [{name: "Incinerate", cooldown: 55, damage: 170}, {name: "Lava Breath", cooldown: 62, damage: 45, aoe: true}]},
+{name: "Radon", grade: 5, type: types.hybrid, area: areas.desert, att: 340, def: 224, hp: 804, dex: 18, skills: [{name: "Dragon's Mark", cooldown: 102, damage: 180, effect: "stun", turns: 2}, {name: "Lava Breath", cooldown: 72, damage: 65, aoe: true}]},
+{name: "Agnid", grade: 6, type: types.dealer, area: areas.desert, att: 449, def: 197, hp: 654, dex: 27, skills: [{name: "Incinerate", cooldown: 64, damage: 200}, {name: "Lava Breath", cooldown: 69, damage: 60, aoe: true}]},
+
+{name: "Coco Cupcake", grade: 1, type: types.support, area: areas.farm, att: 69, def: 52, hp: 342, dex: 9, skills: [{name: "Cherry Bomb", cooldown: 38, damage: 150}]},
+{name: "Red Velvet Cupcake", grade: 2, type: types.support, area: areas.farm, att: 111, def: 84, hp: 417, dex: 10, skills: [{name: "Cherry Bomb", cooldown: 45, damage: 150}, {name: "Flour and Butter", cooldown: 60, effect: "dex", negative: true, amount: 30, turns: 2, aoe: true}]},
+{name: "Green Tea Cupcake", grade: 3, type: types.support, area: areas.farm, att: 153, def: 115, hp: 492, dex: 12, skills: [{name: "Cherry Bomb", cooldown: 55, damage: 170}, {name: "Flour and Butter", cooldown: 72, effect: "dex", negative: true, amount: 40, turns: 2, aoe: true}]},
+{name: "Strawberry Macaroon", grade: 1, type: types.hybrid, area: areas.farm, att: 100, def: 66, hp: 428, dex: 10, skills: [{name: "Sweet Punch", cooldown: 34, damage: 140}]},
+{name: "Pistachio Macaroon", grade: 1, type: types.hybrid, area: areas.farm, att: 100, def: 66, hp: 428, dex: 10, skills: [{name: "Sweet Punch", cooldown: 34, damage: 140}]},
+{name: "Grape Macaroon", grade: 1, type: types.hybrid, area: areas.farm, att: 100, def: 66, hp: 428, dex: 10, skills: [{name: "Sweet Punch", cooldown: 34, damage: 140}]},
+{name: "Vanilla Macaroon", grade: 2, type: types.hybrid, area: areas.farm, att: 147, def: 98, hp: 484, dex: 10, skills: [{name: "Sweet Power Punch", cooldown: 60, damage: 60, effect: "stun", rounds: 2}, {name: "Extra Focus", cooldown: 84, effect: "focus", amount: 60, turns: 2, aoe: true}]},
+{name: "Mixed Berry Macaroon", grade: 3, type: types.hybrid, area: areas.farm, att: 203, def: 135, hp: 572, dex: 12, skills: [{name: "Sweet Power Punch", cooldown: 72, damage: 80, effect: "stun", rounds: 2}, {name: "Extra Focus", cooldown: 96, effect: "focus", amount: 70, turns: 2, aoe: true}]},
+{name: "Nutmeg", grade: 1, type: types.support, area: areas.farm, att: 69, def: 52, hp: 342, dex: 9, skills: [{name: "Sweet Talk!", cooldown: 60, effect: "att", amount: 10, turns: 2, aoe: true}]},
+{name: "Cinnamon", grade: 2, type: types.support, area: areas.farm, att: 111, def: 84, hp: 417, dex: 10, skills: [{name: "Sweet Talk!", cooldown: 72, effect: "att", amount: 10, turns: 2, aoe: true}, {name: "You've Still Got It", cooldown: 240, revive: true, heal: "10%"}]},
+{name: "Clove", grade: 3, type: types.support, area: areas.farm, att: 153, def: 115, hp: 492, dex: 12, skills: [{name: "Sweet Talk!", cooldown: 72, effect: "att", amount: 20, turns: 2, aoe: true}, {name: "Doctorae", cooldown: 66, heal: 79, turns: 2, aoe: true}]},
+{name: "Infantry Remy", grade: 1, type: types.tank, area: areas.farm, att: 59, def: 71, hp: 470, dex: 10, skills: [{name: "Camembert", cooldown: 35, heal: 139}]},
+{name: "Artillery Remy", grade: 1, type: types.dealer, area: areas.farm, att: 119, def: 45, hp: 229, dex: 10, skills: [{name: "Cheese Bomb", cooldown: 54, damage: 50, aoe: true}]},
+{name: "Infantry Jerry", grade: 2, type: types.tank, area: areas.farm, att: 96, def: 116, hp: 573, dex: 12, skills: [{name: "Camembert", cooldown: 42, heal: 166}, {name: "Fatal Fork", cooldown: 40, damage: 140}]},
+{name: "Artillery Jerry", grade: 2, type: types.dealer, area: areas.farm, att: 192, def: 73, hp: 364, dex: 12, skills: [{name: "Cheese Bomb", cooldown: 69, damage: 60, aoe: true}, {name: "Mozzarella", cooldown: 72, effect: "crit", amount: 40, turns: 2}]},
+{name: "Infantry Stew", grade: 3, type: types.tank, area: areas.farm, att: 131, def: 159, hp: 677, dex: 14, skills: [{name: "Camembert", cooldown: 42, heal: 192}, {name: "Fatal Fork", cooldown: 50, damage: 160}]},
+{name: "Artillery Stew", grade: 3, type: types.dealer, area: areas.farm, att: 263, def: 101, hp: 430, dex: 14, skills: [{name: "Cheese Bomb", cooldown: 74, damage: 70, aoe: true}, {name: "Mozzarella", cooldown: 72, effect: "crit", amount: 40, turns: 2}]},
+{name: "Brown Cloak Tom", grade: 3, type: types.dealer, area: areas.farm, att: 263, def: 93, hp: 400, dex: 18, skills: [{name: "Cat Dance", cooldown: 55, damage: 170}, {name: "Agility of a Cat", cooldown: 84, effect: "evade", amount: 80, turns: 2}]},
+{name: "Blue Cloak Tom", grade: 4, type: types.dealer, area: areas.farm, att: 335, def: 120, hp: 460, dex: 22, skills: [{name: "Cat Dance", cooldown: 60, damage: 180}, {name: "Agility of a Cat", cooldown: 96, effect: "evade", amount: 90, turns: 3}]},
+{name: "Red Cloak Tom", grade: 5, type: types.dealer, area: areas.farm, att: 424, def: 163, hp: 586, dex: 27, skills: [{name: "Fancy Cat Dance", cooldown: 55, damage: 190}, {name: "Agility of a Cat", cooldown: 96, effect: "evade", amount: 90, turns: 4}]},
+
+{name: "Reef Piranha", grade: 1, type: types.dealer, area: areas.sea, att: 139, def: 59, hp: 385, dex: 10, skills: [{name: "Blood Stained Fangs", cooldown: 49, damage: 80, turns: 2}]},
+{name: "Deep Sea Piranha", grade: 1, type: types.dealer, area: areas.sea, att: 119, def: 45, hp: 299, dex: 14, skills: [{name: "Blood Stained Fangs", cooldown: 49, damage: 80, turns: 2}]},
+{name: "Blood Red Piranha", grade: 2, type: types.dealer, area: areas.sea, att: 175, def: 52, hp: 260, dex: 14, skills: [{name: "Blind Fangs", cooldown: 54, damage: 60, effect: "blind", turns: 2}, {name: "Fear the Sea", cooldown: 72, effect: "def", negative: true, amount: 30, turns: 2, aoe: true}]},
+{name: "Fiery Piranha", grade: 3, type: types.dealer, area: areas.sea, att: 241, def: 72, hp: 308, dex: 16, skills: [{name: "Blind Fangs", cooldown: 66, damage: 80, effect: "blind", turns: 2}, {name: "Fear the Sea", cooldown: 84, effect: "def", negative: true, amount: 40, turns: 2, aoe: true}]},
+{name: "Ghost Piranha", grade: 4, type: types.dealer, area: areas.sea, att: 335, def: 128, hp: 496, dex: 20, skills: [{name: "Blind Fangs", cooldown: 72, damage: 90, effect: "blind", turns: 2}, {name: "Fear the Sea", cooldown: 96, effect: "def", negative: true, amount: 50, turns: 2, aoe: true}]},
+{name: "Mr. Snaps", grade: 1, type: types.tank, area: areas.sea, att: 79, def: 92, hp: 513, dex: 10, skills: [{name: "Tail Attack", cooldown: 34, damage: 140}]},
+{name: "Mr. Pinch", grade: 2, type: types.tank, area: areas.sea, att: 128, def: 137, hp: 678, dex: 12, skills: [{name: "Cold-Blooded Tail", cooldown: 66, damage: 50, effect: "freeze", turns: 2}, {name: "Hard Shell", cooldown: 36, effect: "def", amount: 30, turns: 2}]},
+{name: "Mr. Crab", grade: 3, type: types.tank, area: areas.sea, att: 175, def: 202, hp: 738, dex: 14, skills: [{name: "Cold-Blooded Tail", cooldown: 72, damage: 60, effect: "freeze", turns: 2}, {name: "Hard Shell", cooldown: 48, effect: "def", amount: 40, turns: 2}]},
+{name: "Capo Shark", grade: 1, type: types.tank, area: areas.sea, att: 69, def: 71, hp: 556, dex: 9, skills: [{name: "Trident Attack", cooldown: 34, damage: 140}]},
+{name: "Consigliere Shark", grade: 2, type: types.tank, area: areas.sea, att: 96, def: 126, hp: 552, dex: 9, skills: [{name: "Cold Trident", cooldown: 66, damage: 50, effect: "freeze", turns: 2}, {name: "Shark Teeth", cooldown: 72, effect: "counter", amount: 70, turns: 2}]},
+{name: "Underboss Shark", grade: 2, type: types.tank, area: areas.sea, att: 96, def: 105, hp: 626, dex: 9, skills: [{name: "Cold Trident", cooldown: 66, damage: 50, effect: "freeze", turns: 2}, {name: "Shark Teeth", cooldown: 72, effect: "counter", amount: 70, turns: 2}]},
+{name: "Boss Shark", grade: 3, type: types.tank, area: areas.sea, att: 131, def: 174, hp: 616, dex: 11, skills: [{name: "Cold Trident", cooldown: 72, damage: 60, effect: "freeze", turns: 2}, {name: "Shark Teeth", cooldown: 72, effect: "counter", amount: 20, turns: 2, aoe: true}]},
+{name: "Godfather Shark", grade: 3, type: types.tank, area: areas.sea, att: 131, def: 145, hp: 738, dex: 11, skills: [{name: "Cold Trident", cooldown: 72, damage: 60, effect: "freeze", turns: 2}, {name: "Shark Teeth", cooldown: 72, effect: "counter", amount: 20, turns: 2, aoe: true}]},
+{name: "Blue Yomi", grade: 1, type: types.dealer, area: areas.sea, att: 129, def: 38, hp: 256, dex: 8, skills: [{name: "Bloody Massacre", cooldown: 59, damage: 60, turns: 3}]},
+{name: "Red Yomi", grade: 2, type: types.dealer, area: areas.sea, att: 207, def: 63, hp: 313, dex: 9, skills: [{name: "Bloody Massacre", cooldown: 70, damage: 60, turns: 3}, {name: "Operate Rocket", cooldown: 48, effect: "dex", amount: 30, turns: 3}]},
+{name: "Yellow Yomi", grade: 3, type: types.dealer, area: areas.sea, att: 318, def: 109, hp: 461, dex: 13, skills: [{name: "Bloody Massacre", cooldown: 75, damage: 70, turns: 3}, {name: "Operate Rocket", cooldown: 54, effect: "dex", amount: 40, turns: 3}]},
+{name: "Jju", grade: 3, type: types.hybrid, area: areas.sea, att: 220, def: 145, hp: 616, dex: 14, skills: [{name: "Rise of the Dragon", cooldown: 55, damage: 170}, {name: "Swift Dragon", cooldown: 72, effect: "counter", amount: 70, turns: 2}]},
+{name: "Riu", grade: 4, type: types.hybrid, area: areas.sea, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "Rise of the Dragon", cooldown: 62, damage: 185}, {name: "Swift Dragon", cooldown: 84, effect: "counter", amount: 80, turns: 2}]},
+{name: "Kraken", grade: 3, type: types.dealer, area: areas.sea, att: 263, def: 101, hp: 430, dex: 14, skills: [{name: "Chill Explosion", cooldown: 72, damage: 60, effect: "freeze", turns: 2}, {name: "Spray", cooldown: 69, damage: 60, aoe: true}]},
+{name: "Pink Kraken", grade: 4, type: types.dealer, area: areas.sea, att: 349, def: 138, hp: 531, dex: 16, skills: [{name: "Chill Explosion", cooldown: 78, damage: 80, effect: "freeze", turns: 2}, {name: "Spray", cooldown: 72, damage: 65, aoe: true}]},
+{name: "Ghost Kraken", grade: 5, type: types.dealer, area: areas.sea, att: 424, def: 168, hp: 603, dex: 18, skills: [{name: "Chill Explosion", cooldown: 84, damage: 90, effect: "freeze", turns: 2}, {name: "Spray", cooldown: 74, damage: 70, aoe: true}]},
+
+{name: "Yuma", grade: 1, type: types.tank, area: areas.thornland, att: 69, def: 71, hp: 556, dex: 9, skills: [{name: "Back Kick", cooldown: 34, damage: 140}]},
+{name: "Buckeye", grade: 2, type: types.tank, area: areas.thornland, att: 111, def: 126, hp: 626, dex: 12, skills: [{name: "Back Kick", cooldown: 40, damage: 140}, {name: "Check Mate", cooldown: 72, effect: "def", negative: true, amount: 30, turns: 2, aoe: true}]},
+{name: "Gilbert", grade: 3, type: types.tank, area: areas.thornland, att: 153, def: 159, hp: 800, dex: 12, skills: [{name: "Back Kick", cooldown: 50, damage: 160}, {name: "Check Mate", cooldown: 84, effect: "def", negative: true, amount: 4, turns: 2, aoe: true}]},
+{name: "Rag Doll Ted", grade: 1, type: types.dealer, area: areas.thornland, att: 129, def: 38, hp: 256, dex: 8, skills: [{name: "Electric Shock", cooldown: 42, damage: 160}]},
+{name: "Rag Doll Toby", grade: 2, type: types.dealer, area: areas.thornland, att: 207, def: 63, hp: 313, dex: 9, skills: [{name: "Electric Shock", cooldown: 50, damage: 160}, {name: "Fly High", cooldown: 69, damage: 60, aoe: true}]},
+{name: "Batty Ted", grade: 3, type: types.dealer, area: areas.thornland, att: 263, def: 101, hp: 430, dex: 19, skills: [{name: "Snow Fight", cooldown: 57, damage: 175}, {name: "Fly High", cooldown: 74, damage: 70, aoe: true}]},
+{name: "Tortie Toby", grade: 3, type: types.dealer, area: areas.thornland, att: 307, def: 101, hp: 430, dex: 12, skills: [{name: "Electric Shock", cooldown: 55, damage: 170}, {name: "Tube Play", cooldown: 76, damage: 75, aoe: true}]},
+{name: "Catty Ted", grade: 4, type: types.dealer, area: areas.thornland, att: 335, def: 128, hp: 496, dex: 22, skills: [{name: "Snow Fight", cooldown: 62, damage: 185}, {name: "Tube Play", cooldown: 69, damage: 60, aoe: true}]},
+{name: "Teddy Toby", grade: 4, type: types.dealer, area: areas.thornland, att: 391, def: 128, hp: 496, dex: 14, skills: [{name: "Snow Fight", cooldown: 60, damage: 180}, {name: "Tube Play", cooldown: 72, damage: 65, aoe: true}]},
+{name: "Deux of Hearts", grade: 1, type: types.support, area: areas.thornland, att: 79, def: 59, hp: 385, dex: 10, skills: [{name: "Wind Card", cooldown: 50, effect: "dex", amount: 30, turns: 2}]},
+{name: "Five of Hearts", grade: 2, type: types.support, area: areas.thornland, att: 128, def: 95, hp: 469, dex: 12, skills: [{name: "Wind Card", cooldown: 60, effect: "dex", amount: 30, turns: 2}, {name: "Focus Card", cooldown: 72, effect: "focus", amount: 50, turns: 2}]},
+{name: "Deux of Diamonds", grade: 1, type: types.support, area: areas.thornland, att: 79, def: 59, hp: 385, dex: 10, skills: [{name: "Wind Card", cooldown: 50, effect: "dex", amount: 30, turns: 2}]},
+{name: "Five of Diamonds", grade: 2, type: types.support, area: areas.thornland, att: 128, def: 95, hp: 469, dex: 12, skills: [{name: "Attack Card", cooldown: 72, effect: "att", amount: 10, turns: 2}, {name: "Focus Card", cooldown: 72, effect: "focus", amount: 50, turns: 2}]},
+{name: "Deux of Spades", grade: 1, type: types.support, area: areas.thornland, att: 79, def: 59, hp: 385, dex: 10, skills: [{name: "Wind Card", cooldown: 50, effect: "dex", amount: 30, turns: 2}]},
+{name: "Six of Spades", grade: 2, type: types.support, area: areas.thornland, att: 128, def: 95, hp: 469, dex: 12, skills: [{name: "Attack Card", cooldown: 72, effect: "att", amount: 10, turns: 2}, {name: "Focus Card", cooldown: 72, effect: "focus", amount: 50, turns: 2}]},
+{name: "Deux of Clubs", grade: 1, type: types.support, area: areas.thornland, att: 79, def: 59, hp: 385, dex: 10, skills: [{name: "Wind Card", cooldown: 50, effect: "dex", amount: 30, turns: 2}]},
+{name: "Four of Clubs", grade: 2, type: types.support, area: areas.thornland, att: 128, def: 95, hp: 469, dex: 12, skills: [{name: "Wind Card", cooldown: 60, effect: "dex", amount: 30, turns: 2}, {name: "Focus Card", cooldown: 72, effect: "focus", amount: 50, turns: 2}]},
+{name: "Sergeant Jack", grade: 2, type: types.dealer, area: areas.thornland, att: 192, def: 73, hp: 364, dex: 12, skills: [{name: "Triple Spear", cooldown: 50, damage: 160}, {name: "Straight Spear", cooldown: 54, damage: 60, effect: "blind", turns: 2}]},
+{name: "Medic Queen", grade: 2, type: types.support, area: areas.thornland, att: 96, def: 73, hp: 364, dex: 9, skills: [{name: "Card's Blessing", cooldown: 84, effect: "remove"}, {name: "Leaf of Revival", cooldown: 66, heal: 70, turns: 2, aoe: true}]},
+{name: "Officer King", grade: 3, type: types.tank, area: areas.thornland, att: 131, def: 174, hp: 616, dex: 11, skills: [{name: "All In", cooldown: 72, effect: "provoke", turns: 2}, {name: "Wild Card", cooldown: 48, effect: "def", amount: 40, turns: 2}]},
+{name: "Captain Ace", grade: 3, type: types.dealer, area: areas.thornland, att: 285, def: 87, hp: 369, dex: 11, skills: [{name: "Full House", cooldown: 55, damage: 170}, {name: "Royal Flush", cooldown: 66, damage: 70, effect: "stun", turns: 2}]},
+{name: "Assassin Jack", grade: 5, type: types.dealer, area: areas.thornland, att: 441, def: 179, hp: 642, dex: 20, skills: [{name: "Triple Spear", cooldown: 55, damage: 190}, {name: "Straight Spear", cooldown: 60, damage: 100, effect: "silence", turns: 2}]},
+{name: "Assassin Queen", grade: 5, type: types.support, area: areas.thornland, att: 237, def: 179, hp: 642, dex: 16, skills: [{name: "Card's Blessing", cooldown: 60, effect: "remove"}, {name: "Leaf of Revival", cooldown: 66, heal: 111, turns: 2, aoe: true}]},
+{name: "Assassin King", grade: 5, type: types.tank, area: areas.thornland, att: 203, def: 269, hp: 804, dex: 14, skills: [{name: "All In", cooldown: 60, effect: "provoke", turns: 2}, {name: "Wild Card", cooldown: 60, effect: "def", amount: 50, turns: 2}]},
+{name: "Assassin Ace", grade: 5, type: types.dealer, area: areas.thornland, att: 475, def: 157, hp: 562, dex: 18, skills: [{name: "Full House", cooldown: 64, damage: 190}, {name: "Royal Flush", cooldown: 60, damage: 70, effect: "stun", turns: 2}]},
+{name: "Evil Joker", grade: 3, type: types.dealer, area: areas.thornland, att: 252, def: 87, hp: 369, dex: 18, skills: [{name: "Ambush", cooldown: 75, damage: 70, turns: 3}, {name: "Blood Stained Card", cooldown: 66, damage: 80, effect: "blind", turns: 2}]},
+{name: "Crazy Joker", grade: 4, type: types.dealer, area: areas.thornland, att: 335, def: 128, hp: 496, dex: 22, skills: [{name: "Ambush", cooldown: 80, damage: 80, turns: 3}, {name: "Blood Stained Card", cooldown: 72, damage: 90, effect: "blind", turns: 2}]},
+{name: "Queen Rogue", grade: 3, type: types.hybrid, area: areas.thornland, att: 220, def: 145, hp: 616, dex: 14, skills: [{name: "Dignity of a Queen", cooldown: 48, damage: 70, effect: "silence", turns: 2}, {name: "Vision Storm", cooldown: 55, damage: 170}]},
+{name: "Queen Noir", grade: 4, type: types.hybrid, area: areas.thornland, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "Dignity of a Queen", cooldown: 54, damage: 80, effect: "silence", turns: 2}, {name: "Dark Magic", cooldown: 300, revive: true, heal: "40%"}]},
+
+{name: "Green Larva", grade: 1, type: types.tank, area: areas.base, att: 59, def: 66, hp: 513, dex: 8, skills: [{name: "Poisoned Needle", cooldown: 45, damage: 70, turns: 2}]},
+{name: "Red Larva", grade: 2, type: types.tank, area: areas.base, att: 96, def: 105, hp: 626, dex: 9, skills: [{name: "Poisoned Needle", cooldown: 54, damage: 70, turns: 2}, {name: "Acid Liquid", cooldown: 72, damage: 150, effect: "curse", chance: 3, turns: 3}]},
+{name: "Mystic Larva", grade: 3, type: types.tank, area: areas.base, att: 131, def: 145, hp: 738, dex: 11, skills: [{name: "Poisoned Needle", cooldown: 58, damage: 80, turns: 2}, {name: "Acid Liquid", cooldown: 72, damage: 150, effect: "curse", chance: 6, turns: 3}]},
+{name: "M2 Turret", grade: 1, type: types.dealer, area: areas.base, att: 119, def: 45, hp: 299, dex: 10, skills: [{name: "Smoke Bomb", cooldown: 40, damage: 50, effect: "blind", turns: 2}]},
+{name: "M3 Turret", grade: 1, type: types.dealer, area: areas.base, att: 109, def: 33, hp: 214, dex: 12, skills: [{name: "Smoke Bomb", cooldown: 40, damage: 50, effect: "blind", turns: 2}]},
+{name: "KH-179 Turret", grade: 2, type: types.dealer, area: areas.base, att: 207, def: 63, hp: 313, dex: 9, skills: [{name: "Beam Cannon", cooldown: 45, damage: 150}, {name: "Magnetic Field", cooldown: 72, effect: "focus", amount: 50, turns: 2, aoe: true}]},
+{name: "M244 Turret", grade: 3, type: types.dealer, area: areas.base, att: 285, def: 87, hp: 369, dex: 11, skills: [{name: "Magnetic Field", cooldown: 84, effect: "focus", amount: 60, turns: 2, aoe: true}, {name: "Ceaseless Bomb", cooldown: 55, damage: 170}]},
+{name: "Evademic Rayner", grade: 2, type: types.tank, area: areas.base, att: 96, def: 126, hp: 522, dex: 9, skills: [{name: "Saber Attack", cooldown: 40, damage: 140}, {name: "Burning Saber", cooldown: 54, damage: 50, effect: "stun", turns: 2}]},
+{name: "Evademic Gunner", grade: 2, type: types.dealer, area: areas.base, att: 175, def: 52, hp: 260, dex: 14, skills: [{name: "Prism", cooldown: 50, damage: 160}, {name: "Cold Prism", cooldown: 66, damage: 50, effect: "freeze", turns: 2}]},
+{name: "Duric Rayner", grade: 3, type: types.tank, area: areas.base, att: 131, def: 174, hp: 616, dex: 11, skills: [{name: "Burning Saber", cooldown: 66, damage: 70, effect: "stun", turns: 2}, {name: "Death Beam", cooldown: 50, damage: 160}]},
+{name: "Duric Gunner", grade: 3, type: types.dealer, area: areas.base, att: 241, def: 72, hp: 308, dex: 16, skills: [{name: "Prism Bomb", cooldown: 55, damage: 170}, {name: "Cold Prism", cooldown: 72, damage: 60, effect: "freeze", turns: 2}]},
+{name: "Tudede", grade: 2, type: types.hybrid, area: areas.base, att: 147, def: 98, hp: 484, dex: 10, skills: [{name: "Energy Ball", cooldown: 42, damage: 60, effect: "silence", turns: 2}, {name: "ET Technology", cooldown: 240, revive: true, heal: "20%"}]},
+{name: "Vaness", grade: 3, type: types.hybrid, area: areas.base, att: 203, def: 135, hp: 572, dex: 12, skills: [{name: "Transcended Unit", cooldown: 72, damage: 80, effect: "stun", turns: 2}, {name: "ET Technology", cooldown: 240, revive: true, heal: "30%"}]},
+{name: "Apophis", grade: 4, type: types.hybrid, area: areas.base, att: 259, def: 172, hp: 659, dex: 14, skills: [{name: "Evademic Ability", cooldown: 120, effect: "remove", negative: true, aoe: true}, {name: "Burning Soul", cooldown: 79, damage: 80, aoe: true}]},
+{name: "Space Flying Tudede", grade: 5, type: types.hybrid, area: areas.base, att: 340, def: 224, hp: 804, dex: 20, skills: [{name: "Cooling Nozzle", cooldown: 78, damage: 100, effect: "freeze", turns: 3}, {name: "Chaos Ball", cooldown: 90, deals: 180, effect: "confuse", turns: 2}]},
+{name: "Space Flying Apophis", grade: 6, type: types.hybrid, area: areas.base, att: 383, def: 253, hp: 861, dex: 19, skills: [{name: "Evademic Ability", cooldown: 100, effect: "remove", negative: true, aoe: true}, {name: "Electric Bubble", cooldown: 84, damage: 80, effect: "silence", chance: 7, turns: 2, aoe: true}]},
+{name: "Scorpion", grade: 4, type: types.dealer, area: areas.base, att: 335, def: 120, hp: 460, dex: 20, skills: [{name: "Shock Nova", cooldown: 78, damage: 90, effect: "stun", turns: 2}, {name: "Catalyst", cooldown: 60, effect: "dex", amount: 50, turns: 4}]},
+{name: "Spear", grade: 5, type: types.dealer, area: areas.base, att: 407, def: 157, hp: 522, dex: 23, skills: [{name: "Shock Nova", cooldown: 78, damage: 90, effect: "stun", turns: 2}, {name: "Sky Killer", cooldown: 74, damage: 70, aoe: true}]},
+
+{name: "Ghost", grade: 1, type: types.dealer, area: areas.keronic, att: 139, def: 45, hp: 299, dex: 9, skills: [{name: "Call of a Demon", cooldown: 60, damage: 150, effect: "curse", chance: 3, turns: 3}]},
+{name: "Vulcan", grade: 1, type: types.hybrid, area: areas.keronic, att: 100, def: 66, hp: 428, dex: 10, skills: [{name: "Ignite", cooldown: 47, damage: 75, turns: 2}]},
+{name: "Krater", grade: 1, type: types.tank, area: areas.keronic, att: 59, def: 78, hp: 428, dex: 8, skills: [{name: "Shield of the Land", cooldown: 30, effect: "def", amount: 30, turns: 2}, {name: "Spirit of Golem", cooldown: 60, effect: "provoke", turns: 2}]},
+{name: "Obsidian Krater", grade: 2, type: types.tank, area: areas.keronic, att: 96, def: 126, hp: 522, dex: 9, skills: [{name: "Burning Fist", cooldown: 45, damage: 150}, {name: "Earthquake", cooldown: 36, damage: 50, effect: "silence", turns: 2}]},
+{name: "Hellfire Krater", grade: 3, type: types.tank, area: areas.keronic, att: 164, def: 181, hp: 769, dex: 14, skills: [{name: "Shield of the Land", cooldown: 48, effect: "def", amount: 40, turns: 2}, {name: "Hellfire", cooldown: 66, damage: 70, effect: "stun", turns: 2}]},
+{name: "Demonfire Krater", grade: 4, type: types.tank, area: areas.keronic, att: 209, def: 230, hp: 887, dex: 16, skills: [{name: "Shield of the Land", cooldown: 60, effect: "def", amount: 50, turns: 2}, {name: "Hellfire", cooldown: 72, damage: 80, effect: "stun", turns: 2}]},
+{name: "Schaken", grade: 2, type: types.hybrid, area: areas.keronic, att: 147, def: 98, hp: 484, dex: 10, skills: [{name: "Armor of Darkness", cooldown: 60, effect: "skill", turns: 2}, {name: "Destruction", cooldown: 61, damage: 85, turns: 2}]},
+{name: "Faust", grade: 2, type: types.dealer, area: areas.keronic, att: 207, def: 63, hp: 313, dex: 9, skills: [{name: "Flame Destruction", cooldown: 55, damage: 170}, {name: "Vow of Darkness", cooldown: 60, effect: "att", amount: 50, turns: 2}]},
+{name: "Listic", grade: 2, type: types.support, area: areas.keronic, att: 128, def: 95, hp: 469, dex: 12, skills: [{name: "Curse", cooldown: 48, damage: 70, effect: "silence", turns: 2}, {name: "Liberate Soul", cooldown: 84, effect: "remove"}]},
+{name: "Destroyer Schaken", grade: 3, type: types.hybrid, area: areas.keronic, att: 203, def: 135, hp: 572, dex: 12, skills: [{name: "Armor of Darkness", cooldown: 60, effect: "skill", turns: 2}, {name: "Deamon's Weapon", cooldown: 66, damage: 95, turns: 2}]},
+{name: "Destroyer Faust", grade: 3, type: types.dealer, area: areas.keronic, att: 285, def: 87, hp: 369, dex: 11, skills: [{name: "Flame of Faust", cooldown: 55, damage: 170}, {name: "Vow of Darkness", cooldown: 60, effect: "att", amount: 60, turns: 2}]},
+{name: "Destroyer Listic", grade: 3, type: types.support, area: areas.keronic, att: 175, def: 130, hp: 553, dex: 14, skills: [{name: "Rage of Listic", cooldown: 64, damage: 190}, {name: "Liberate Soul", cooldown: 72, effect: "remove"}]},
+{name: "Fluxion Schaken", grade: 4, type: types.hybrid, area: areas.keronic, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "Armor of Darkness", cooldown: 60, effect: "skill", turns: 2}, {name: "Deamon's Weapon", cooldown: 73, damage: 110, turns: 2}]},
+{name: "Dark Faust", grade: 4, type: types.dealer, area: areas.keronic, att: 391, def: 128, hp: 496, dex: 16, skills: [{name: "Flame of Faust", cooldown: 60, damage: 180}, {name: "Vow of Darkness", cooldown: 66, effect: "att", amount: 65, turns: 2}]},
+{name: "Dark Listic", grade: 4, type: types.support, area: areas.keronic, att: 223, def: 165, hp: 638, dex: 16, skills: [{name: "Listic's Nightmare", cooldown: 54, damage: 100, effect: "silence", turns: 2}, {name: "Liberate Soul", cooldown: 60, effect: "remove"}]},
+{name: "Asmodeus", grade: 5, type: types.dealer, area: areas.keronic, att: 486, def: 168, hp: 562, dex: 14, skills: [{name: "Armor of Evil", cooldown: 72, effect: "damage", turns: 2}, {name: "Clutch of Death", cooldown: 60, damage: 80, effect: "stun", turns: 2}]},
+{name: "Belphegor", grade: 6, type: types.dealer, area: areas.keronic, att: 559, def: 184, hp: 668, dex: 17, skills: [{name: "Armor of Evil", cooldown: 66, effect: "damage", turns: 2}, {name: "Burnig Prison", cooldown: 84, damage: 65, effect: "blind", turns: 2, aoe: true}]},
+
+{name: "Shadow Bomber Bat", grade: 1, type: types.dealer, area: areas.village, att: 149, def: 52, hp: 342, dex: 10, skills: [{name: "Fire in the Hole", cooldown: 56, damage: 55, aoe: true}]},
+{name: "Twilight Bomber Bat", grade: 2, type: types.dealer, area: areas.village, att: 224, def: 73, hp: 364, dex: 10, skills: [{name: "Dynamite", cooldown: 72, effect: "crit", amount: 40, turns: 2}, {name: "Boom!", cooldown: 56, damage: 75, turns: 2}]},
+{name: "Shade Bomber Bat", grade: 3, type: types.dealer, area: areas.village, att: 318, def: 109, hp: 461, dex: 13, skills: [{name: "Boom!", cooldown: 61, damage: 85, turns: 2}, {name: "Fire in the Hole", cooldown: 74, damage: 70, aoe: true}]},
+{name: "Grumpy Jagar", grade: 1, type: types.tank, area: areas.village, att: 79, def: 85, hp: 556, dex: 10, skills: [{name: "Give Me Your Head", cooldown: 50, damage: 60, effect: "stun", turns: 2}]},
+{name: "Evil Jagar", grade: 2, type: types.tank, area: areas.village, att: 96, def: 116, hp: 573, dex: 12, skills: [{name: "Give Me Your Head", cooldown: 66, damage: 70, effect: "stun", turns: 2}, {name: "Hit me", cooldown: 84, effect: "provoke", turns: 2}]},
+{name: "Wicked Jagar", grade: 4, type: types.tank, area: areas.village, att: 167, def: 203, hp: 780, dex: 16, skills: [{name: "Hit me", cooldown: 66, effect: "provoke", turns: 2}, {name: "Ripe Pumkin'", cooldown: 54, heal: 195, self: true, turns: 2}]},
+{name: "Possessed Nicky", grade: 2, type: types.hybrid, area: areas.village, att: 160, def: 105, hp: 522, dex: 12, skills: [{name: "Poke in the Ribs", cooldown: 61, damage: 85, turns: 2}, {name: "All Mine!", cooldown: 48, damage: 65, heal: "30%"}]},
+{name: "Possessed Jacky", grade: 3, type: types.hybrid, area: areas.village, att: 220, def: 145, hp: 616, dex: 14, skills: [{name: "Poke in the Ribs", cooldown: 66, damage: 95, turns: 2}, {name: "Greedhead", cooldown: 52, damage: 70, heal: "35%"}]},
+{name: "Menace Polter-kin", grade: 2, type: types.dealer, area: areas.village, att: 192, def: 73, hp: 364, dex: 16, skills: [{name: "Mate", cooldown: 72, damage: 150, effect: "curse", chance: 3, turns: 3}, {name: "Surprice", cooldown: 48, damage: 70, effect: "silence", turns: 2}]},
+{name: "Ominous Polter-kin", grade: 3, type: types.dealer, area: areas.village, att: 274, def: 105, hp: 449, dex: 18, skills: [{name: "Mate", cooldown: 72, damage: 150, effect: "curse", chance: 6, turns: 3}, {name: "Spooky Wind", cooldown: 66, effect: "att", negative: true, amount: 30, turns: 2}]},
+{name: "Scarecrow Raul", grade: 3, type: types.support, area: areas.village, att: 131, def: 101, hp: 430, dex: 11, skills: [{name: "Hot Wind", cooldown: 60, effect: "remove", negative: true}, {name: "Strange Light", cooldown: 36, heal: 152, turns: 2}]},
+{name: "Scarecrow Oren", grade: 4, type: types.dealer, area: areas.village, att: 167, def: 128, hp: 496, dex: 12, skills: [{name: "Jack-o'-Lantern", cooldown: 72, effect: "dex", negative: true, amount: 50, turns: 2, aoe: true}, {name: "Strange Light", cooldown: 36, heal: 168, turns: 2}]},
+{name: "Scarecrow Thomas", grade: 6, type: types.support, area: areas.village, att: 279, def: 211, hp: 718, dex: 18, skills: [{name: "Recover", cooldown: 108, effect: "remove", aoe: true}, {name: "Strange Light", cooldown: 36, heal: 287, turns: 2}]},
+{name: "Succubus Ginna", grade: 3, type: types.dealer, area: areas.village, att: 307, def: 101, hp: 430, dex: 12, skills: [{name: "Slap In The Face", cooldown: 55, damage: 170}, {name: "Fascinate", cooldown: 72, effect: "counter", amount: 20, turns: 2, aoe: true}]},
+{name: "Succubus Diandra", grade: 5, type: types.dealer, area: areas.village, att: 492, def: 168, hp: 603, dex: 18, skills: [{name: "Devil's Temptation", cooldown: 72, damage: 180, effect: "curse", chance: 10, turns: 2}, {name: "Fascinate", cooldown: 84, effect: "counter", amount: 70, turns: 2, aoe: true}]},
+{name: "Succubus Rosie", grade: 6, type: types.dealer, area: areas.village, att: 599, def: 211, hp: 718, dex: 20, skills: [{name: "Devil's Temptation", cooldown: 69, damage: 200, effect: "curse", chance: 25, turns: 2}, {name: "Fascinate", cooldown: 96, effect: "counter", amount: 80, turns: 3, aoe: true}]},
+{name: "Stein", grade: 5, type: types.hybrid, area: areas.village, att: 281, def: 186, hp: 667, dex: 14, skills: [{name: "Screw Tennis", cooldown: 90, damage: 180, effect: "silence", turns: 2}, {name: "Scary Face", cooldown: 72, effect: "dex", negative: true, amount: 60, turns: 2, aoe: true}]},
+{name: "Franken", grade: 6, type: types.hybrid, area: areas.village, att: 400, def: 264, hp: 898, dex: 18, skills: [{name: "Screw Tennis", cooldown: 96, damage: 200, effect: "silence", turns: 3}, {name: "Weird Howl", cooldown: 84, effect: "crit", amount: 45, turns: 2, aoe: true}]},
+
+{name: "Snowman Blue", grade: 1, type: types.support, area: areas.event, att: 79, def: 59, hp: 385, dex: 10, skills: [{name: "Igloo", cooldown: 30, effect: "def", amount: 15, turns: 2, front: true}]},
+{name: "Snowman Red", grade: 2, type: types.support, area: areas.event, att: 128, def: 95, hp: 469, dex: 12, skills: [{name: "Igloo", cooldown: 48, effect: "def", amount: 20, turns: 2, front: true}, {name: "Frozen Fontunes!", cooldown: 84, effect: "remove"}]},
+{name: "Snowman Grey", grade: 3, type: types.support, area: areas.event, att: 153, def: 115, hp: 492, dex: 12, skills: [{name: "Cheer Up!", cooldown: 72, effect: "remove"}, {name: "Me Cute", cooldown: 72, effect: "att", amount: 20, negative: true, turns: 2, aoe: true}]},
+{name: "Rudolf Gilbert", grade: 4, type: types.dealer, area: areas.event, att: 195, def: 147, hp: 567, dex: 14, skills: [{name: "Rudolph's Devotion", cooldown: 66, effect: "remove"}, {name: "Check Mate", cooldown: 84, effect: "def", amount: 45, negative: true, turns: 2, aoe: true}]},
+{name: "Angel Amelia", grade: 5, type: types.support, area: areas.event, att: 237, def: 179, hp: 642, dex: 16, skills: [{name: "The light of the Holy Spirit", cooldown: 24, heal: 256}, {name: "Angel's Belssing", cooldown: 60, effect: "remove"}]},
+{name: "Santa Fernando", grade: 6, type: types.support, area: areas.event, att: 279, def: 237, hp: 718, dex: 18, skills: [{name: "Jingle Bells", cooldown: 24, heal: 300}, {name: "Carol Medley", cooldown: 66, heal: 146, turns: 2, aoe: true}]}
+];
+
+
+	var filter = function() {
+		var filtered = new Array();
+		var styleElement = document.head.appendChild(document.createElement('style'));
+
+		var updateFilter = function(className, hide) {
+			className = "."+className;
+			if (hide) {
+				var index = filtered.indexOf(className);
+				if (index > -1) {
+					filtered.splice(index, 1);
+				}
+			}
+			else {
+				filtered.push(className);
+			}
+
+			styleElement.innerHTML = filtered.join(', ')+' { display: none;}';
+		};
+
+		return function(e) {
+			updateFilter(e.target.value, e.target.checked);
+		}
+	};
+
+	var sorter = function(array, table, columns, ascSort) {
+		var lastSort;
+
+		var sortArray = function(sortOn, reverse) {
+			if (reverse) {
+				array.reverse();
+			}
+			else {
+				var sortFunc = function(a, b) {
+					a = a[sortOn];
+					b = b[sortOn];
+					return (a==b)?0:(a>b ^ !ascSort[sortOn])?1:-1;
+				};
+
+				array.mergeSort(sortFunc);
+			}
+		};
+
+		var showSort = function(cell, reverse) {
+			var classes = cell.classList;
+			if (reverse && classes.contains('down')) {
+				classes.remove('down');
+				classes.add('up');
+			}
+			else {
+				classes.remove('up');
+				classes.add('down');
+			}
+		};
+
+		var updateTable = function() {
+			array.forEach(function(hero) {
+				table.appendChild(hero.row);
+			});
+		}
+
+		return function(e) {
+			var cell = e.target;
+			var sortOn = columns[cell.cellIndex];
+			var reverse = sortOn === lastSort;
+			lastSort = sortOn;
+
+			sortArray(sortOn, reverse);
+			showSort(cell, reverse);
+			updateTable();
+		};
+	};
+
+	var getDescription = function(skill) {
+		var damageDescription = function(skill) {
+			var s = "Deals "+skill.damage+"% attack damage ";
+			if (skill.effect) {
+				s += "and ";
+				if (skill.chance) {
+					s += skill.chance+"% chance to ";
+				}
+
+				if (skill.effect === "target") {
+					s += "all friendly forces will attack ";
+				}
+				else if (skill.effect === "curse") {
+					s += "knock out ";
+				}
+				else if (skill.negative) {
+					s += "decreases ";
+				}
+				else {
+					s += skill.effect+" ";
+				}
+			}
+			else {
+				s += "to ";
+			}
+
+			s += skill.aoe ? "all enemies" : "an enemy";
+			if (skill.negative) {
+				s += " "+skill.effect+" by "+skill.amount+"%";
+			}
+
+			if (skill.turns) {
+				if (skill.effect === "curse") {
+					s += " after "+skill.turns+" turns";
+				}
+				else {
+					s += " for "+skill.turns+" turns ";
+				}
+			}
+
+			if (skill.heal) {
+				s += " and restores "+skill.heal+" health";
+			}
+
+			if (skill.drain) {
+				s += " drains "+skill.drain+"% health";
+			}
+
+			return s;
+		};
+
+		var removeDescription = function(skill) {
+			var s;
+			if (skill.negative) {
+				s = "Removes buff from ";
+				if (skill.aoe) {
+					s += "all enemies";
+				}
+				else {
+					s += "an enemy";
+				}
+			}
+			else {
+				s = "Removes enemy spells from ";
+				if (skill.aoe) {
+					s += "all allies"
+				}
+				else {
+					s += "an ally";
+				}
+
+				if (skill.heal) {
+					s += " and recover "+skill.heal+" HP."
+				}
+			}
+
+			return s;
+		};
+
+		var effectDescription = function(skill) {
+			var s;
+			if (skill.effect === "skill") {
+				s = "Immunes hero from enemy skills for "+skill.turns+" turns";
+			} else if (skill.effect === "damage") {
+				s = "Immunes hero from damage for "+skill.turns+" turns";
+			} else if (skill.effect === "stealth") {
+				s = "Grants stealth to hero for "+skill.turns+" turns";
+			} else if (skill.effect === "provoke") {
+				s = "Provokes all enemies to attack hero for "+skill.turns+" turns";
+			} else if (skill.negative) {
+				s = "Decreases ";
+				if (skill.aoe) {
+					s += "all enemies ";
+				} else {
+					s += "an enemy ";
+				}
+				s += skill.effect+" by "+skill.amount+"% for "+skill.turns+" turns";
+			} else {
+				s = "Increases ";
+				if (skill.aoe) {
+					s += "all allies ";
+				} else if (skill.front) {
+					s += "all allies in front row "
+				} else {
+					s += "hero ";
+				}
+				s += skill.effect+" by "+skill.amount+"% for "+skill.turns+" turns";
+			}
+
+			return s;
+		};
+
+		var reviveDescription = function(skill) {
+			var s = "Revives ";
+			if (skill.aoe) {
+				s += "all alies ";
+			} else {
+				s += "an ally ";
+			}
+			s += "(recover with "+skill.heal+" health)";
+
+			return s;
+		};
+
+		var healDescription = function(skill) {
+			var s = "Restores ";
+			if (skill.aoe) {
+				s += "all allies ";
+			} else if (skill.self) {
+				s += "hero ";
+			} else {
+				s += "an ally ";
+			}
+			s += "health by "+skill.heal;
+			if (skill.effect) {
+				s += " and "+effectDescription(skill);
+			} else if (skill.turns) {
+				s += " for "+skill.turns+" turns";
+			}
+
+			return s;
+		};
+
+		var createDescription = function(skill) {
+			var s = "";
+			if (skill.damage) {
+				s = damageDescription(skill);
+			} else if (skill.effect === "remove") {
+				s = removeDescription(skill);
+			} else if (skill.revive) {
+				s = reviveDescription(skill);
+			} else if (skill.heal) {
+				s = healDescription(skill);
+			} else if (skill.effect) {
+				s = effectDescription(skill);
+			}
+
+			return s;
+		};
+
+		return createDescription(skill);
+	};
+
+	var initFilters = function(wrapper, filterFunc) {
+		var gradeFilter = document.createElement('div');
+		for (var i = 1; i < 7; i++) {
+			var check = document.createElement('input');
+			check.setAttribute('type', 'checkbox');
+			check.setAttribute('value', "grade"+i);
+			check.setAttribute('checked', 'checked');
+			check.addEventListener('change', filterFunc);
+			var label = document.createElement('label');
+			label.appendChild(check);
+			label.appendChild(document.createTextNode(i+"★"));
+			gradeFilter.appendChild(label);
+		}
+		wrapper.appendChild(gradeFilter);
+
+		var typeFilter = document.createElement('div');
+		for (var type in types) {
+			var value = types[type];
+			var check = document.createElement('input');
+			check.setAttribute('type', 'checkbox');
+			check.setAttribute('value', "type"+value);
+			check.setAttribute('checked', 'checked');
+			check.addEventListener('change', filterFunc);
+			var label = document.createElement('label');
+			label.appendChild(check);
+			label.appendChild(document.createTextNode(value));
+			typeFilter.appendChild(label);
+		}
+		wrapper.appendChild(typeFilter);
+	};
+
+	var initHeaders = function(thead, headers, sortFunc) {
+		var tr = thead.appendChild(document.createElement('tr'));
+		var th;
+		headers.forEach(function(head) {
+			th = document.createElement('th');
+			th.addEventListener('click', sortFunc);
+			th.innerHTML = head;
+			tr.appendChild(th);
+		});
+	};
+
+	var initContent = function(tbody, attributes) {
+		var hero, tr, td;
+		for (var i = 0; hero = heroes[i]; i++) {
+			tr = document.createElement('tr');
+			heroes[i].number = i+1;
+			heroes[i].row = tr;
+
+			attributes.forEach(function(attribute) {
+				td = document.createElement('td');
+
+				if (attribute === "damage") {
+					return;
+				}
+				else if (attribute === "skills") {
+					hero.skills.forEach(function(skill) {
+						td = document.createElement('td');
+						td.innerHTML = getDescription(skill);
+						tr.appendChild(td);
+					});
+				}
+				else {
+					td.innerHTML = hero[attribute];
+					if (attribute === "grade") {
+						td.innerHTML += "★";
+						tr.classList.add("grade"+hero.grade);
+					}
+					else if (attribute === "type") {
+						tr.classList.add("type"+hero.type);
+					}
+					tr.appendChild(td);
+				}
+			});
+
+			tbody.appendChild(tr);
+		}
+	};
+
+	var options = {
+		ascSort: {number: true, name: true, grade: false, type: true, area: true, att: false, def: false, hp: false, dex: false},
+		attributes: ["number", "name", "grade", "type", "area", "att", "def", "hp", "dex", "skills"],
+		headers: ["#", "Name", "Grade", "Type", "Stage", "Att", "Def", "HP", "Dex"]
+	};
+
+	var init = function(initOptions) {
+		for (var option in initOptions) {
+			options[option] = initOptions[option];
+		}
+
+		var table = document.getElementById(options.table);
+		var filters = document.getElementById(options.filters);
+
+		var thead = document.createElement('thead');
+		var tbody = document.createElement('tbody');
+		var sortFunc = sorter(heroes, tbody, options.attributes, options.ascSort);
+		var filterFunc = filter();
+
+		initHeaders(thead, options.headers, sortFunc);
+		initContent(tbody, options.attributes);
+		initFilters(filters, filterFunc);
+
+		table.appendChild(thead);
+		table.appendChild(tbody);
+	};
+
+	return {init: init};
+})();
+	</script>
+</head>
+<body>
+<h1>Hello Heroes</h1>
+<div id="filters"></div>
+<table id="heroes"></table>
+<script>
+heroTable.init({table: "heroes", filters: "filters"});
+</script>
+</body>
+</html>

@@ -159,8 +159,8 @@ var heroTable = (function() {
 {name: "Swordmaiden Yui", grade: 6, type: types.dealer, area: areas.armon, att: 479, def: 171, hp: 582, dex: 27, skills: [{name: "Name of Justice", cooldown: 62, damage: 185}, {name: "Moon Makeup!", cooldown: 84, effect: "att", amount: 35, turns: 2, aoe: true}]},
 {name: "Ninja Sasuke", grade: 3, type: types.dealer, area: areas.armon, att: 274, def: 105, hp: 449, dex: 18, skills: [{name: "Lightning Dart", cooldown: 68, damage: 100, turns: 2}, {name: "Ninja Vanish", cooldown: 84, effect: "stealth", turns: 2}]},
 {name: "Ninja Kotaro", grade: 4, type: types.dealer, area: areas.armon, att: 349, def: 134, hp: 517, dex: 21, skills: [{name: "Shadow Thunder", cooldown: 72, damage: 65, aoe: true}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 2}]},
-{name: "Ninja Hanjo", grade: 5, type: types.dealer, area: areas.armon, att: 424, def: 163, hp: 586, dex: 24, skills: [{name: "Dark Stroke", cooldown: 64, damage: 190}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 2}]},
-{name: "Ninja Keiasu", grade: 6, type: types.dealer, area: areas.armon, att: 519, def: 197, hp: 673, dex: 28, skills: [{name: "Chaos Stroke", cooldown: 64, damage: 220, effect: "confuse", turns: 3}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 3}]},
+{name: "Ninja Hanjo", grade: 5, type: types.dealer, area: areas.armon, att: 424, def: 163, hp: 586, dex: 24, skills: [{name: "Dark Stroke", cooldown: 64, damage: 190}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 3}]},
+{name: "Ninja Keiasu", grade: 6, type: types.dealer, area: areas.armon, att: 519, def: 197, hp: 673, dex: 28, skills: [{name: "Chaos Stroke", cooldown: 64, damage: 220, effect: "confuse", turns: 3}, {name: "Ninja Vanish", cooldown: 78, effect: "stealth", turns: 4}]},
 {name: "Teddybear Grey", grade: 4, type: types.support, area: areas.armon, att: 195, def: 147, hp: 567, dex: 14, skills: [{name: "Cheer Up!", cooldown: 66, effect: "remove"}, {name: "Me Cute", cooldown: 78, effect: "att", negative: true, amount: 35, turns: 2, aoe: true}]},
 {name: "Teddybear Sky", grade: 5, type: types.tank, area: areas.armon, att: 220, def: 258, hp: 924, dex: 18, skills: [{name: "Bad Kid!", cooldown: 96, damage: 90, effect: "target", turns: 2}, {name: "Me Cute", cooldown: 83, effect: "att", negative: true, amount: 40, turns: 2, aoe: true}]},
 {name: "Teddybear Pinky", grade: 6, type: types.hybrid, area: areas.armon, att: 383, def: 253, hp: 861, dex: 19, skills: [{name: "Aing", cooldown: 69, effect: "skill", turns: 3}, {name: "Wahoo!!", cooldown: 64, damage: 190, effect: "dex", negative: true, amount: 15, turns: 2}]},
@@ -584,7 +584,7 @@ var heroTable = (function() {
 				s = "Immunes hero from damage for " + skill.turns + " turns";
 			}
 			else if (skill.effect === "stealth") {
-				s = "Grants stealth to hero for " + skill.turns + " turns";
+				s = "Grants stealth and increase hero crit to 15% for " + skill.turns + " turns";
 			}
 			else if (skill.effect === "provoke") {
 				s = "Provokes all enemies to attack hero for " + skill.turns + " turns";

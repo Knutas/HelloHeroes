@@ -350,7 +350,7 @@ var heroTable = (function() {
 {name: "Wicked Jagar", grade: 4, type: types.tank, area: areas.village, att: 167, def: 203, hp: 780, dex: 16, skills: [{name: "Hit me", cooldown: 66, effect: "provoke", turns: 2}, {name: "Ripe Pumkin'", cooldown: 54, heal: 195, self: true, turns: 2}]},
 {name: "Possessed Nicky", grade: 2, type: types.hybrid, area: areas.village, att: 160, def: 105, hp: 522, dex: 12, skills: [{name: "Poke in the Ribs", cooldown: 61, damage: 85, turns: 2}, {name: "All Mine!", cooldown: 48, damage: 65, heal: "30%", self: true}]},
 {name: "Possessed Jacky", grade: 3, type: types.hybrid, area: areas.village, att: 220, def: 145, hp: 616, dex: 14, skills: [{name: "Poke in the Ribs", cooldown: 66, damage: 95, turns: 2}, {name: "Greedhead", cooldown: 52, damage: 70, heal: "35%", self: true}]},
-{name: "Andy the Rascal", grade: 4, type: types.hybrid, area: areas.village, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "Rascal", cooldown: 72, effect: "dex", amount: 10, turns: 3, aoe: true, percent: false}, {name: "Congcong Poke", cooldown: 62, damage: 185}]},
+{name: "Andy the Rascal", grade: 4, type: types.hybrid, area: areas.village, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "Rascal", cooldown: 72, effect: "dex", amount: 10, turns: 3, aoe: true, points: true}, {name: "Congcong Poke", cooldown: 62, damage: 185}]},
 {name: "Sad Tommy", grade: 5, type: types.hybrid, area: areas.village, att: 340, def: 224, hp: 804, dex: 18, skills: [{name: "Congcong Jump", cooldown: 90, damage: 180, effect: "confuse", turns: 2}, {name: "Congcong Poke", cooldown: 64, damage: 190, effect: "dex", negative: true, amount: 20, turns: 2}]},
 {name: "Menace Polter-kin", grade: 2, type: types.dealer, area: areas.village, att: 192, def: 73, hp: 364, dex: 16, skills: [{name: "Mate", cooldown: 72, damage: 150, effect: "curse", chance: 3, turns: 3}, {name: "Surprice", cooldown: 48, damage: 70, effect: "silence", turns: 2}]},
 {name: "Ominous Polter-kin", grade: 3, type: types.dealer, area: areas.village, att: 274, def: 105, hp: 449, dex: 18, skills: [{name: "Mate", cooldown: 72, damage: 150, effect: "curse", chance: 6, turns: 3}, {name: "Spooky Wind", cooldown: 66, effect: "att", negative: true, amount: 30, turns: 2}]},
@@ -617,7 +617,7 @@ var heroTable = (function() {
 						s += "hero ";
 					}
 				}
-				s += skill.effect + " by " + skill.amount + (skill.percent ? "%" : " points") + " for " + skill.turns + " turns";
+				s += skill.effect + " by " + skill.amount + (skill.points ? " points" : "%") + " for " + skill.turns + " turns";
 			}
 
 			return s;

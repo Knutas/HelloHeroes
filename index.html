@@ -656,11 +656,11 @@ var heroTable = (function() {
 
 		var healDescription = function() {
 			var s = "Restores ";
-			if (skill.self) {
-				s += "hero ";
-			}
-			else if (skill.aoe) {
+			if (skill.aoe) {
 				s += "all allies ";
+			}
+			else if (skill.self) {
+				s += "hero ";
 			}
 			else {
 				s += "an ally ";

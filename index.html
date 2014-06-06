@@ -247,8 +247,8 @@ var heroTable = (function() {
 {name: "Tiamat", grade: 4, type: types.dealer, area: areas.desert, att: 405, def: 138, hp: 531, dex: 15, skills: [{name: "Incinerate", cooldown: 55, damage: 170}, {name: "Lava Breath", cooldown: 62, damage: 45, aoe: true}]},
 {name: "Radon", grade: 5, type: types.hybrid, area: areas.desert, att: 340, def: 224, hp: 804, dex: 18, skills: [{name: "Dragon's Mark", cooldown: 102, damage: 180, effect: "stun", turns: 2}, {name: "Lava Breath", cooldown: 72, damage: 65, aoe: true}]},
 {name: "Agnid", grade: 6, type: types.dealer, area: areas.desert, att: 499, def: 197, hp: 654, dex: 27, skills: [{name: "Incinerate", cooldown: 64, damage: 200, effect: "stun", chance: 90, turns: 2}, {name: "Lava Breath", cooldown: 74, damage: 70, aoe: true}]},
-{name: "Mareed", grade: 4, type: types.support, area: areas.reinforce, att: 223, def: 165, hp: 638, dex: 16, skills: [{name: "Your Wish", cooldown: 54, heal: 111, aoe: true}, {name: "Live Forever", cooldown: 300, revive: true, heal: 40}]},
-{name: "Ipurit", grade: 5, type: types.support, area: areas.reinforce, att: 271, def: 201, hp: 723, dex: 18, skills: [{name: "Your Wish", cooldown: 66, heal: 116, turns: 2, aoe: true}, {name: "Turn the Tide", cooldown: 108, effect: "steal"}]},
+{name: "Mareed", grade: 4, type: types.support, area: areas.desert, att: 223, def: 165, hp: 638, dex: 16, skills: [{name: "Your Wish", cooldown: 54, heal: 111, aoe: true}, {name: "Live Forever", cooldown: 300, revive: true, heal: 40}]},
+{name: "Ipurit", grade: 5, type: types.support, area: areas.desert, att: 271, def: 201, hp: 723, dex: 18, skills: [{name: "Your Wish", cooldown: 66, heal: 116, turns: 2, aoe: true}, {name: "Turn the Tide", cooldown: 108, effect: "steal"}]},
 
 {name: "Coco Cupcake", grade: 1, type: types.support, area: areas.farm, att: 69, def: 52, hp: 342, dex: 9, skills: [{name: "Cherry Bomb", cooldown: 38, damage: 150}]},
 {name: "Red Velvet Cupcake", grade: 2, type: types.support, area: areas.farm, att: 111, def: 84, hp: 417, dex: 10, skills: [{name: "Cherry Bomb", cooldown: 45, damage: 150}, {name: "Flour and Butter", cooldown: 60, effect: "dex", negative: true, amount: 30, turns: 2, aoe: true}]},
@@ -270,9 +270,9 @@ var heroTable = (function() {
 {name: "Brown Cloak Tom", grade: 3, type: types.dealer, area: areas.farm, att: 263, def: 93, hp: 400, dex: 18, skills: [{name: "Cat Dance", cooldown: 55, damage: 170}, {name: "Agility of a Cat", cooldown: 84, effect: "evade", amount: 80, turns: 2}]},
 {name: "Blue Cloak Tom", grade: 4, type: types.dealer, area: areas.farm, att: 335, def: 120, hp: 460, dex: 22, skills: [{name: "Cat Dance", cooldown: 60, damage: 180}, {name: "Agility of a Cat", cooldown: 96, effect: "evade", amount: 90, turns: 3}]},
 {name: "Red Cloak Tom", grade: 5, type: types.dealer, area: areas.farm, att: 424, def: 163, hp: 586, dex: 27, skills: [{name: "Fancy Cat Dance", cooldown: 55, damage: 190}, {name: "Agility of a Cat", cooldown: 96, effect: "evade", amount: 90, turns: 4}]},
-{name: "Chichi", grade: 4, type: types.support, area: areas.reinforce, att: 195, def: 147, hp: 567, dex: 14, skills: [{name: "Lucky Prayer", cooldown: 24, heal: 205}, {name: "Cat Sole", cooldown: 66, effect: "remove"}]},
-{name: "Nabi", grade: 5, type: types.dealer, area: areas.reinforce, att: 492, def: 168, hp: 603, dex: 17, skills: [{name: "Shut It", cooldown: 51, damage: 75, effect: "silence", turns: 2}, {name: "No Can't Do", cooldown: 62, damage: 185}]},
-{name: "Miya", grade: 6, type: types.support, area: areas.reinforce, att: 319, def: 237, hp: 807, dex: 27, skills: [{name: "Lucky Prayer", cooldown: 24, heal: 349}, {name: "Cat Sole", cooldown: 54, effect: "remove"}]},
+{name: "Chichi", grade: 4, type: types.support, area: areas.farm, att: 195, def: 147, hp: 567, dex: 14, skills: [{name: "Lucky Prayer", cooldown: 24, heal: 205}, {name: "Cat Sole", cooldown: 66, effect: "remove"}]},
+{name: "Nabi", grade: 5, type: types.dealer, area: areas.farm, att: 492, def: 168, hp: 603, dex: 17, skills: [{name: "Shut It", cooldown: 51, damage: 75, effect: "silence", turns: 2}, {name: "No Can't Do", cooldown: 62, damage: 185}]},
+{name: "Miya", grade: 6, type: types.support, area: areas.farm, att: 319, def: 237, hp: 807, dex: 27, skills: [{name: "Lucky Prayer", cooldown: 24, heal: 349}, {name: "Cat Sole", cooldown: 54, effect: "remove"}]},
 
 {name: "Reef Piranha", grade: 1, type: types.dealer, area: areas.sea, att: 139, def: 59, hp: 385, dex: 10, skills: [{name: "Blood Stained Fangs", cooldown: 49, damage: 80, turns: 2}]},
 {name: "Deep Sea Piranha", grade: 1, type: types.dealer, area: areas.sea, att: 119, def: 45, hp: 299, dex: 14, skills: [{name: "Blood Stained Fangs", cooldown: 49, damage: 80, turns: 2}]},

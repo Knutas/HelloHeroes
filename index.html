@@ -152,7 +152,7 @@ var heroTable = (function() {
 {name: "Avril", grade: 6, type: types.dealer, area: areas.guards, att: 479, def: 184, hp: 628, dex: 26, skills: [{name: "Got a problem?", cooldown: 64, damage: 185, effect: "stun", change: 20, turns: 2}, {name: "Wink", cooldown: 90, effect: "att", negative: true, amount: 45, turns: 2, aoe: true}]},
 {name: "Calvin", grade: 4, type: types.dealer, area: areas.guards, att: 363, def: 147, hp: 567, dex: 16, skills: [{name: "Sword of Blood", cooldown: 86, damage: 175, heal: "10%", self: true}, {name: "Family Glory", cooldown: 78, damage: 90, effect: "stun", turns: 2}]},
 {name: "Lloyd", grade: 5, type: types.dealer, area: areas.guards, att: 407, def: 168, hp: 562, dex: 18, skills: [{name: "Sword of Blood", cooldown: 96, damage: 185, heal: "15%", self: true}, {name: "Family Protection", cooldown: 60, effect: "skill", turns: 2}]},
-{name: "Dylan", grade: 6, type: types.dealer, area: areas.guards, att: 519, def: 224, hp: 762, dex: 22, skills: [{name: "Sword of Blood", cooldown: 75, damage: 195, heal: "33%", self: true}, {name: "Family Honor", cooldown: 69, damage: 65, aoe: true}]},
+{name: "Dylan", grade: 6, type: types.dealer, area: areas.guards, att: 599, def: 211, hp: 718, dex: 22, skills: [{name: "Sword of Blood", cooldown: 75, damage: 195, heal: "33%", self: true}, {name: "Family Honor", cooldown: 69, damage: 65, aoe: true}]},
 {name: "Maid Anna", grade: 4, type: types.hybrid, area: areas.guards, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "So Dusty!", cooldown: 66, damage: 160, effect: "blind", turns: 2}, {name: "Quick Cleaning", cooldown: 66, effect: "remove", heal: "25%"}]},
 {name: "Maid Mary", grade: 5, type: types.hybrid, area: areas.guards, att: 340, def: 224, hp: 804, dex: 18, skills: [{name: "So Dusty!", cooldown: 66, damage: 180, effect: "blind", turns: 2}, {name: "Quick Cleaning", cooldown: 60, effect: "remove", heal: "25%"}]},
 {name: "Maid Emma", grade: 6, type: types.support, area: areas.guards, att: 319, def: 237, hp: 807, dex: 20, skills: [{name: "Fully Ready", cooldown: 72, effect: "dex", negative: true, amount: 60, turns: 2, aoe: true}, {name: "Quick Cleaning", cooldown: 54, effect: "remove", heal: "30%"}]},
@@ -173,7 +173,7 @@ var heroTable = (function() {
 {name: "Teddybear Pinky", grade: 6, type: types.hybrid, area: areas.reinforce, att: 383, def: 253, hp: 861, dex: 19, skills: [{name: "Aing", cooldown: 69, effect: "skill", turns: 3}, {name: "Wahoo!!", cooldown: 64, damage: 190, effect: "dex", negative: true, amount: 15, turns: 2}]},
 {name: "Fighter Yul", grade: 4, type: types.dealer, area: areas.reinforce, att: 377, def: 156, hp: 602, dex: 16, skills: [{name: "United We Stand!", cooldown: 96, effect: "focus", amount: 75, turns: 2, aoe: true}, {name: "Hopping Tornado", cooldown: 62, damage: 185}]},
 {name: "Fighter Ruri", grade: 5, type: types.dealer, area: areas.reinforce, att: 458, def: 190, hp: 682, dex: 18, skills: [{name: "Kitty Kick", cooldown: 73, damage: 120, turns: 2}, {name: "Hopping Tornado", cooldown: 64, damage: 190}]},
-{name: "Fighter Rina", grade: 6, type: types.dealer, area: areas.reinforce, att: 539, def: 224, hp: 762, dex: 20, skills: [{name: "Fast Fast Fast", cooldown: 90, effect: "dex", amount: 90, turns: 4, back: true}, {name: "Sense Threat", cooldown: 96, damage: 240, effect: "target"}]},
+{name: "Fighter Rina", grade: 6, type: types.dealer, area: areas.reinforce, att: 539, def: 224, hp: 762, dex: 20, skills: [{name: "Fast Fast Fast", cooldown: 90, effect: "dex", amount: 90, turns: 4, back: true}, {name: "Sense Threat", cooldown: 96, damage: 240, effect: "target", turns: 2}]},
 {name: "Veteran Barnes", grade: 4, type: types.dealer, area: areas.reinforce, att: 335, def: 120, hp: 460, dex: 20, skills: [{name: "M60 Rifle", cooldown: 67, damage: 170, effect: "def", negative: true, amount: 20, turns: 2}, {name: "Warning Shot", cooldown: 72, effect: "dex", negative: true, amount: 45, turns: 2, aoe: true}]},
 {name: "Veteran Ryan", grade: 5, type: types.dealer, area: areas.reinforce, att: 407, def: 145, hp: 522, dex: 23, skills: [{name: "M60 Rifle", cooldown: 67, damage: 180, effect: "def", negative: true, amount: 25, turns: 2}, {name: "Fire in the Hole", cooldown: 93, damage: 50, effect: "def", negative: true, amount: 20, turns: 2, aoe: true}]},
 {name: "Veteran Bo", grade: 6, type: types.dealer, area: areas.reinforce, att: 479, def: 184, hp: 628, dex: 26, skills: [{name: "M60 Rifle", cooldown: 67, damage: 190, effect: "def", negative: true, amount: 30, turns: 2}, {name: "Fire in the Hole", cooldown: 88, damage: 60, effect: "def", negative: true, amount: 25, turns: 2, aoe: true}]},
@@ -585,7 +585,7 @@ var heroTable = (function() {
 				}
 
 				if (skill.effect === "target") {
-					s += "all friendly forces will attack ";
+					s += "all friendly forces attack the enemy that you attacked";
 				}
 				else if (skill.effect === "curse") {
 					s += "knock out ";
@@ -601,7 +601,9 @@ var heroTable = (function() {
 				s += "to ";
 			}
 
-			s += skill.aoe ? "all enemies" : "an enemy";
+			if (skill.effect !== "target") {
+				s += skill.aoe ? "all enemies" : "an enemy";
+			}
 			if (skill.negative) {
 				s += " " + skill.effect + " by " + skill.amount + "%";
 			}

@@ -205,6 +205,12 @@ var heroTable = (function() {
 {name: "Forward Robin", grade: 4, type: types.dealer, area: areas.reinforce, att: 391, def: 128, hp: 496, dex: 14, skills: [{name: "Fantastic goal", cooldown: 66, damage: 100, effect: "silence", turns: 2}, {name: "Best Defence", cooldown: 72, effect: "damage", turns: 2}]},
 {name: "Midfielder David", grade: 5, type: types.hybrid, area: areas.reinforce, att: 315, def: 208, hp: 747, dex: 16, skills: [{name: "Brilliant footwork", cooldown: 60, damage: 180}, {name: "Best Defence", cooldown: 72, effect: "damage", turns: 2}]},
 {name: "Striker Diego", grade: 6, type: types.dealer, area: areas.reinforce, att: 539, def: 171, hp: 582, dex: 17, skills: [{name: "Overhead kick", cooldown: 64, damage: 190}, {name: "Best Defence", cooldown: 84, effect: "damage", turns: 3}]},
+{name: "Sir Pelleas", grade: 4, type: types.support, area: areas.reinforce, att: 167, def: 165, hp: 607, dex: 12, skills: [{name: "Poultice", cooldown: 24, heal: 216}, {name: "Call to Arms", cooldown: 66, effect: "remove"}]},
+{name: "Sir Galahad", grade: 5, type: types.tank, area: areas.reinforce, att: 220, def: 258, hp: 924, dex: 18, skills: [{name: "Charge of Fury", cooldown: 67, damage: 180, effect: "def", negative: true, amount: 25, turns: 2}, {name: "Mighty Guard", cooldown: 96, effect: "def", amount: 45, turns: 2, aoe: true}]},
+{name: "Sir Lancelot", grade: 6, type: types.dealer, area: areas.reinforce, att: 519, def: 211, hp: 718, dex: 20, skills: [{name: "Last Blitz", cooldown: 64, damage: 200}, {name: "Rocket Spear", cooldown: 90, damage: 40, effect: "knock-out", chance: 4, aoe: true}]},
+{name: "Wizard Jasper", grade: 4, type: types.hybrid, area: areas.reinforce, att: 268, def: 177, hp: 680, dex: 15, skills: [{name: "Lightning Ball", cooldown: 50, damage: 160}, {name: "Aura of Focus", cooldown: 96, effect: "focus", amount: 75, turns: 2, aoe: true}]},
+{name: "Magician Melchior", grade: 5, type: types.dealer, area: areas.reinforce, att: 441, def: 179, hp: 642, dex: 18, skills: [{name: "Lightning Ball", cooldown: 55, damage: 170}, {name: "Aura of Focus", cooldown: 96, effect: "focus", amount: 80, turns: 2, aoe: true}]},
+{name: "Archmage Balthazar", grade: 6, type: types.dealer, area: areas.reinforce, att: 499, def: 197, hp: 673, dex: 20, skills: [{name: "Lightning Ball", cooldown: 60, damage: 180}, {name: "Chain Lightning", cooldown: 100, effect: "remove", negative: true, damage: 20, aoe: true}]},
 
 {name: "Baby Mushroom", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 85, hp: 556, dex: 10, skills: [{name: "Bounce Bounce", cooldown: 30, damage: 130}]},
 {name: "Uncle Mushroom", grade: 1, type: types.tank, area: areas.forest, att: 79, def: 78, hp: 599, dex: 10, skills: [{name: "Bounce Bounce", cooldown: 30, damage: 130}]},
@@ -643,6 +649,10 @@ var heroTable = (function() {
 				else {
 					s += "an enemy";
 				}
+
+				if (skill.damage) {
+					s += " and deal " + skill.damage + "% attack damage";
+				}
 			}
 			else {
 				s = "Removes enemy spells from ";
@@ -750,11 +760,11 @@ var heroTable = (function() {
 
 		var createDescription = function() {
 			var s = "";
-			if (skill.damage) {
-				s = damageDescription(skill);
-			}
-			else if (skill.effect === "remove") {
+			if (skill.effect === "remove") {
 				s = removeDescription(skill);
+			}
+			else if (skill.damage) {
+				s = damageDescription(skill);
 			}
 			else if (skill.revive) {
 				s = reviveDescription(skill);

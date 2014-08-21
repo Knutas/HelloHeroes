@@ -262,7 +262,7 @@ var heroTable = (function() {
 {name: "Agnid", grade: 6, type: types.dealer, area: areas.desert, att: 499, def: 197, hp: 654, dex: 27, skills: [{name: "Incinerate", cooldown: 64, damage: 200, effect: "stun", chance: 90, turns: 2}, {name: "Lava Breath", cooldown: 69, damage: 70, aoe: true}]},
 {name: "Mareed", grade: 4, type: types.support, area: areas.desert, att: 223, def: 165, hp: 638, dex: 16, skills: [{name: "Your Wish", cooldown: 54, heal: 111, aoe: true}, {name: "Live Forever", cooldown: 300, revive: true, heal: 40}]},
 {name: "Ifrit", grade: 5, type: types.support, area: areas.desert, att: 271, def: 201, hp: 723, dex: 18, skills: [{name: "Your Wish", cooldown: 66, heal: 116, turns: 2, aoe: true}, {name: "Turn the Tide", cooldown: 108, effect: "steal"}]},
-{name: "Genie", grade: 6, type: types.support, area: areas.desert, att: 239, def: 184, hp: 628, dex: 16, skills: [{name: "Fairy's Blessing", cooldown: 75, provoke: "attack one ally in the front row", turns: 2}, {name: "Turn the Tide", cooldown: 90, effect: "steal"}]},
+{name: "Genie", grade: 6, type: types.support, area: areas.desert, att: 239, def: 184, hp: 628, dex: 16, skills: [{name: "Fairy's Blessing", cooldown: 75, effect: "provoke", turns: 2, front: true}, {name: "Turn the Tide", cooldown: 90, effect: "steal"}]},
 {name: "Scarab", grade: 1, type: types.hybrid, area: areas.desert, att: 85, def: 56, hp: 368, dex: 10, skills: [{name: "Morning Sun", cooldown: 30, damage: 130}]},
 {name: "Enraged Scarab", grade: 2, type: types.hybrid, area: areas.desert, att: 140, def: 92, hp: 458, dex: 10, skills: [{name: "Morning Sun", cooldown: 102, damage: 130, effect: "stun", turns: 2}, {name: "Khepri", cooldown: 72, effect: "evade", amount: 70, turns: 2}]},
 {name: "Sacred Scarab", grade: 3, type: types.hybrid, area: areas.desert, att: 203, def: 135, hp: 572, dex: 12, skills: [{name: "Morning Sun", cooldown: 108, damage: 140, effect: "stun", turns: 2}, {name: "Khepri", cooldown: 72, effect: "evade", amount: 70, turns: 2}]},
@@ -700,7 +700,14 @@ var heroTable = (function() {
 				s = "Grants stealth and increase hero crit to 15% for " + skill.turns + " turns";
 			}
 			else if (skill.effect === "provoke") {
-				s = "Provokes all enemies to attack hero for " + skill.turns + " turns";
+				s = "Provokes all enemies to attack ";
+				if (skill.front) {
+					s += "one ally in front row";
+				}
+				else {
+					s += "hero";
+				}
+				s += " for " + skill.turns + " turns";
 			}
 			else if (skill.effect === "steal") {
 				s = "Steals an enemy buff";

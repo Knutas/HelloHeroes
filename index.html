@@ -461,6 +461,9 @@ var heroTable = (function() {
 {name: "Mafia Gapne", grade: 5, type: types.dealer, area: areas.city, att: 492, def: 168, hp: 603, dex: 15, skills: [{name: "Bullet Rain", cooldown: 78, damage: 65, effect: "blind", chance: 10, turns: 2, aoe: true}, {name: "Take This and Go", cooldown: 72, effect: "dex", amount: 50, turns: 3, aoe: true}]},
 {name: "Don Jobara", grade: 6, type: types.dealer, area: areas.city, att: 579, def: 197, hp: 673, dex: 20, skills: [{name: "Bullet Rain", cooldown: 80, damage: 55, turns: 2, aoe: true}, {name: "Rain of Money", cooldown: 88, damage: 55, effect: "confuse", chance: 5, turns: 3, aoe: true}]},
 
+{name: "Coconut Rice Cake", grade: 1, type: types.tank, area: areas.event, att: 69, def: 71, hp: 556, dex: 9, skills: [{name: "Smooshy", cooldown: 100, damage: 130}, {name: "Holiday Spirit", cooldown: 100, effect: "dex", amount: 5, negative: true, turns: 2}]},
+{name: "Honey Rice Cake", grade: 2, type: types.tank, area: areas.event, att: 111, def: 116, hp: 678, dex: 10, skills: [{name: "Smooshy", cooldown: 100, damage: 135}, {name: "Holiday Spirit", cooldown: 100, effect: "dex", amount: 10, negative: true, turns: 2}]},
+{name: "Blueberry Rice Cake", grade: 3, type: types.tank, area: areas.event, att: 153, def: 159, hp: 800, dex: 12, skills: [{name: "Smooshy", cooldown: 100, damage: 140}, {name: "Holiday Spirit", cooldown: 100, effect: "dex", amount: 15, negative: true, turns: 2}]},
 {name: "Snowman Blue", grade: 1, type: types.support, area: areas.event, att: 79, def: 59, hp: 385, dex: 10, skills: [{name: "Igloo", cooldown: 30, effect: "def", amount: 15, turns: 2, front: true}]},
 {name: "Snowman Red", grade: 2, type: types.support, area: areas.event, att: 128, def: 95, hp: 469, dex: 12, skills: [{name: "Igloo", cooldown: 48, effect: "def", amount: 20, turns: 2, front: true}, {name: "Frozen Fortunes!", cooldown: 84, effect: "remove"}]},
 {name: "Snowman Grey", grade: 3, type: types.support, area: areas.event, att: 153, def: 115, hp: 492, dex: 12, skills: [{name: "Cheer Up!", cooldown: 72, effect: "remove"}, {name: "Me Cute", cooldown: 72, effect: "att", amount: 20, negative: true, turns: 2, aoe: true}]},
@@ -469,7 +472,8 @@ var heroTable = (function() {
 {name: "Santa Fernando", grade: 6, type: types.support, area: areas.event, att: 279, def: 237, hp: 718, dex: 18, skills: [{name: "Jingle Bells", cooldown: 24, heal: 300}, {name: "Carol Medley", cooldown: 66, heal: 146, turns: 2, aoe: true}]},
 {name: "Superstar Talisa", grade: 4, type: types.dealer, area: areas.event, att: 321, def: 110, hp: 425, dex: 20, skills: [{name: "Wake Up", cooldown: 72, damage: 80, effect: "stun", turns: 2}, {name: "Wink", cooldown: 72, effect: "att", negative: true, amount: 30, turns: 2, aoe: true}]},
 {name: "Superstar Robin", grade: 4, type: types.dealer, area: areas.event, att: 391, def: 128, hp: 496, dex: 14, skills: [{name: "Fantastic goal", cooldown: 66, damage: 100, effect: "silence", turns: 2}, {name: "Best Defence", cooldown: 72, effect: "damage", turns: 2}]},
-{name: "Dancer June", grade: 4, type: types.support, area: areas.event, att: 167, def: 128, hp: 496, dex: 12, skills: [{name: "Amazing Skill", cooldown: 120, effect: "remove", negative: true, aoe: true}, {name: "Blow Kiss", cooldown: 72, effect: "att", negative: true, amount: 25, turns: 2, aoe: true}]}
+{name: "Dancer June", grade: 4, type: types.support, area: areas.event, att: 167, def: 128, hp: 496, dex: 12, skills: [{name: "Amazing Skill", cooldown: 120, effect: "remove", negative: true, aoe: true}, {name: "Blow Kiss", cooldown: 72, effect: "att", negative: true, amount: 25, turns: 2, aoe: true}]},
+{name: "Full Moon Ruri", grade: 4, type: types.dealer, area: areas.event, att: 377, def: 156, hp: 602, dex: 16, skills: [{name: "Kitty Kick", cooldown: 73, damage: 115, turns: 2}, {name: "Hopping Tornado", cooldown: 62, effect: "att", damage: 185}]}
 ];
 
 	var createElement = function createElement(element, attributes, innerHTML, parent) {

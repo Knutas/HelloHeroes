@@ -893,7 +893,7 @@ var heroTable = (function() {
 		createSpinner("Level 30 +", 0, 5, userOptions.upgrade, upgradeChange, wrapper);
 		wrapper.appendChild(document.createTextNode(" "));
 
-		createSpinner("AOE multiplier ", 1, 5, userOptions.aoe, aoeChange, wrapper);
+		createSpinner("AoE multiplier ", 1, 5, userOptions.aoe, aoeChange, wrapper);
 		wrapper.appendChild(createElement('br'));
 
 		createCheckbox("Sum turn damage", userOptions.turns, useTurns, wrapper);
@@ -1078,7 +1078,7 @@ var heroTable = (function() {
 					}
 
 					heal = skill.heal;
-					text = (skill.aoe ? 'AOE ' : '') + skill.heal + '%';
+					text = (skill.aoe ? 'AoE ' : '') + skill.heal + '%';
 					td = hero.row.cells[attributes.indexOf('reviveHeal')];
 					registerSkill(hero, 'reviveHeal', heal, text, td);
 				});
@@ -1131,7 +1131,7 @@ var heroTable = (function() {
 	var options = {
 		ascSort: {number: true, name: true, grade: false, type: true, area: true, att: false, def: false, hp: false, dex: false, singleDmg: false, aoeDmg: false, singleHeal: false, aoeHeal: false, reviveHeal: false},
 		attributes: ["number", "name", "grade", "type", "area", "att", "def", "hp", "dex", "singleDmg", "aoeDmg", "singleHeal", "aoeHeal", "reviveHeal", "skills"],
-		headers: ["#", "Name", "Grade", "Type", "Stage", "Att", "Def", "HP", "Dex", "Single dmg", "AOE dmg", "Single heal", "AOE heal", "Revive"],
+		headers: ["#", "Name", "Grade", "Type", "Stage", "Att", "Def", "HP", "Dex", "Single dmg", "AoE dmg", "Single heal", "AoE heal", "Revive"],
 		userOptions: {
 			showDescription: true,
 			upgrade: 0,

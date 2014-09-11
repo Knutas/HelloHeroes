@@ -476,14 +476,14 @@ var heroTable = (function() {
 {name: "Full Moon Ruri", grade: 4, type: types.dealer, area: areas.event, att: 377, def: 156, hp: 602, dex: 16, skills: [{name: "Kitty Kick", cooldown: 73, damage: 115, turns: 2}, {name: "Hopping Tornado", cooldown: 62, damage: 185}]}
 ];
 
-	var createElement = function createElement(element, attributes, innerHTML, parent) {
+	var createElement = function(element, attributes, innerHtml, parent) {
 		element = document.createElement(element);
 		for (var i in attributes) {
 			element.setAttribute(i, attributes[i]);
 		}
 
-		if (innerHTML) {
-			element.innerHTML = innerHTML;
+		if (innerHtml) {
+			element.innerHTML = innerHtml;
 		}
 
 		if (parent) {
@@ -903,14 +903,13 @@ var heroTable = (function() {
 		wrapper.appendChild(document.createTextNode(" "));
 
 		var show = options.userOptions.showDescription;
-		createCheckbox("Show skill description", show, setShowHideDescription, wrapper)
+		createCheckbox("Show skill description", show, setShowHideDescription, wrapper);
 		showHideDescription(show);
 	};
 
 	var initFilters = function (wrapper, filterFunc) {
 		var initGradeFilter = function() {
 			var gradeFilter = createElement('div');
-			var i, check, label;
 			for (i = 1; i < 7; i++) {
 				createCheckbox(i + "★", true, filterFunc, gradeFilter, "grade" + i);
 				gradeFilter.appendChild(document.createTextNode(" "));
@@ -921,7 +920,7 @@ var heroTable = (function() {
 
 		var initTypeFilter = function() {
 			var typeFilter = createElement('div');
-			var type, value, check, label;
+			var type, value;
 			for (type in types) {
 				value = types[type];
 				createCheckbox(value, true, filterFunc, typeFilter, "type" + value)

@@ -1042,7 +1042,7 @@ var heroTable = (function() {
 					}
 
 					if (typeof skill.heal === "string") {
-						heal = 1;
+						heal = parseInt(skill.heal)/100;
 						text = skill.heal;
 					}
 					else {

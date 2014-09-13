@@ -513,8 +513,8 @@ var heroTable = (function() {
 	}
 
 	var createSpinner = function(text, min, max, value, listener, parent) {
-		var span = createElement('span', null, text, parent);
-		var spinner = createElement('input', {type: "number", min: min, max: max, value: value}, null, span);
+		var label = createElement('label', null, text, parent);
+		var spinner = createElement('input', {type: "number", min: min, max: max, value: value}, null, label);
 		spinner.style.width = "2em";
 		spinner.addEventListener('change', listener);
 	};

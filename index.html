@@ -119,6 +119,14 @@ var heroTable = (function() {
 	"use strict";
 	var types = {tank: "Tanker", dealer: "Dealer", hybrid: "Hybrid", support: "Support"};
 	var areas = {guards: "The Armon Guards", reinforce: "The Armon Reinforcement", forest: "Red Mushroom Forest", desert: "Desert of Sandstorm", farm: "Sweet Cookie Farm", sea: "Deep Sea Ravine", thornland: "Wondrous Thornland", base: "Abandoned Advance Base", keronic: "Keronic Base", village: "Ghostly Pumpkin Village", east: "Far Far East", city: "Hero City", event: "Event Hero"};
+	var skillTypes = {
+		damage: { damage: 'Deal damage' },
+		negStat: {blind: 'Blind', confuse: 'Confuse', freeze: 'Freeze', curse: 'Knock out', silence: 'Silence', stun: 'Stun', target: 'Target'},
+		posStat: {provoke: 'Provoke', dmg: 'Immune to damage', spell: 'Immune to spell',  stealth: 'Stealth'},
+		recovery: {heal: 'Heal', revive: 'Revive', cleanse: 'Remove debuff', remove: 'Remove buff', steal: 'Steal buff'},
+		buff: {att: 'Attack damage', crit: 'Critical rate', counter: 'Counter attack', def: 'Defense', dex: 'Dexterity', evade: 'Evasion', focus: 'Focus'},
+		debuff: { negAtt: 'Attack damage', negDef: 'Defense', negDex: 'Dexterity' }
+	};
 
 	var heroes = [
 {name: "Harold", grade: 2, type: types.tank, area: areas.guards, att: 111, def: 116, hp: 678, dex: 10, skills: [{name: "Slash The Sky", cooldown: 20, damage: 130}, {name: "Defense mode", cooldown: 48, effect: "def", amount: 40, turns: 2}]},
@@ -519,27 +527,50 @@ var heroTable = (function() {
 		spinner.addEventListener('change', listener);
 	};
 
-	var filter = function() {
-		var filtered = [];
-		var styleElement = createElement('style', null, null, document.head);
+	var filters = function() {
+		var hiddenHeroes = [];
+		var skillType = "";
+		var skillArea = "";
 
-		var updateFilter = function(className, hide) {
-			className = "." + className;
-			if (hide) {
-				var index = filtered.indexOf(className);
+		var heroStyle = createElement('style', null, null, document.head);
+		var skillStyle = createElement('style', null, null, document.head);
+
+		var filterHero = function(className, show) {
+			className = '.' + className;
+			if (show) {
+				var index = hiddenHeroes.indexOf(className);
 				if (index > -1) {
-					filtered.splice(index, 1);
+					hiddenHeroes.splice(index, 1);
 				}
 			}
 			else {
-				filtered.push(className);
+				hiddenHeroes.push(className);
 			}
 
-			styleElement.innerHTML = filtered.join(', ') + ' { display: none;}';
+			heroStyle.innerHTML = hiddenHeroes.join(', ') + ' { display: none;}';
 		};
 
-		return function(e) {
-			updateFilter(e.target.value, e.target.checked);
+		var filterSkills = function () {
+			var style = "";
+			if (skillType !== "") {
+				style = '#' + options.tableId + ' tbody tr:not(.' + skillType + skillArea + ') { display: none;}';
+			}
+
+			skillStyle.innerHTML = style;
+		};
+
+		return {
+			heroFilter: function(e) {
+				filterHero(e.target.value, e.target.checked);
+			},
+			skillTypeFilter: function(e) {
+				skillType = e.target.value;
+				filterSkills();
+			},
+			skillAreaFilter: function(e) {
+				skillArea = e.target.value;
+				filterSkills();
+			}
 		};
 	};
 
@@ -823,6 +854,34 @@ var heroTable = (function() {
 		return viewName() + ' ' + viewCooldown() + '<br/>' + getDescription(skill);
 	};
 
+	var getSkillClasses = function (skill) {
+		var classes = [];
+		var area = (skill.aoe || skill.front || skill.back) ? 'Aoe' : 'Single';
+
+		if (skill.damage) {
+			classes.push('damage');
+			classes.push('damage' + area);
+		}
+
+		if (skill.revive) {
+			classes.push('revive');
+			classes.push('revive' + area);
+		}
+
+		if (skill.heal) {
+			classes.push('heal');
+			classes.push('heal' + ((skill.self && skill.aoe) ? 'Single' : area));
+		}
+
+		if (skill.effect) {
+			var effect = skill.negative ? 'neg' + skill.effect.charAt(0).toUpperCase() + skill.effect.slice(1) : skill.effect;
+			classes.push(effect);
+			classes.push(effect + area);
+		}
+
+		return classes;
+	};
+
 	var upgradeChange = function(e) {
 		var input = e.target;
 		var value = parseInt(input.value);
@@ -913,8 +972,8 @@ var heroTable = (function() {
 	var initFilters = function (wrapper, filterFunc) {
 		var initGradeFilter = function() {
 			var gradeFilter = createElement('div');
-			for (i = 1; i < 7; i++) {
-				createCheckbox(i + "★", true, filterFunc, gradeFilter, "grade" + i);
+			for (var i = 1; i < 7; i++) {
+				createCheckbox(i + "★", true, filterFunc.heroFilter, gradeFilter, "grade" + i);
 				gradeFilter.appendChild(document.createTextNode(" "));
 			}
 
@@ -926,15 +985,47 @@ var heroTable = (function() {
 			var type, value;
 			for (type in types) {
 				value = types[type];
-				createCheckbox(value, true, filterFunc, typeFilter, "type" + value)
+				createCheckbox(value, true, filterFunc.heroFilter, typeFilter, "type" + value);
 				typeFilter.appendChild(document.createTextNode(" "));
 			}
 
 			return typeFilter;
 		};
 
+		var initSkillFilter = function() {
+			var skillFilter = createElement('div');
+
+			var label = createElement('label', null, 'Skill type ', skillFilter);
+			var select = createElement('select', null, null, label);
+			createElement('option', {value: ''}, 'Any' , select);
+			var groupLabels = {damage: '', negStat: 'Negative status', posStat: 'Postitive status', recovery: 'Recovery', buff: 'Buff', debuff: 'Debuff'};
+			var category, type, cat, value, labelText;
+			for (category in skillTypes) {
+				cat = skillTypes[category];
+				labelText = groupLabels[category];
+				var group = labelText === '' ? select : createElement('optgroup', {label: labelText}, null, select);
+				for (type in cat) {
+					value = cat[type];
+					createElement('option', {value: type}, value, group);
+				}
+			}
+
+			select.addEventListener('change', filterFunc.skillTypeFilter);
+
+			label = createElement('label', null, ' Target ', skillFilter);
+			select = createElement('select', null, null, label);
+			createElement('option', {value: ''}, 'Any' , select);
+			createElement('option', {value: 'Single'}, 'Single' , select);
+			createElement('option', {value: 'Aoe'}, 'AoE' , select);
+
+			select.addEventListener('change', filterFunc.skillAreaFilter);
+
+			return skillFilter;
+		};
+
 		wrapper.appendChild(initGradeFilter());
 		wrapper.appendChild(initTypeFilter());
+		wrapper.appendChild(initSkillFilter());
 	};
 
 	var initHeaders = function(thead, headers, sortFunc) {
@@ -963,6 +1054,10 @@ var heroTable = (function() {
 				else if (attribute === "skills") {
 					hero.skills.forEach(function(skill) {
 						td = createElement('td', null, viewSkill(skill), tr);
+						var classes = getSkillClasses(skill);
+						classes.forEach(function(className) {
+							tr.classList.add(className);
+						});
 					});
 				}
 				else {
@@ -1159,18 +1254,18 @@ var heroTable = (function() {
 
 		var table = document.getElementById(options.tableId);
 		var optionsWrapper = document.getElementById(options.optionsId);
-		var filters = document.getElementById(options.filtersId);
+		var filterWrapper = document.getElementById(options.filtersId);
 
 		var thead = createElement('thead');
 		var tbody = createElement('tbody');
 		var sortFunc = sorter(heroes, tbody, options.attributes, options.ascSort);
 		updateSort = sortFunc.update;
-		var filterFunc = filter();
+		var filterFunc = filters();
 
 		initHeaders(thead, options.headers, sortFunc.listener);
 		initContent(tbody, options.attributes);
 		initUserOptions(optionsWrapper, options.userOptions);
-		initFilters(filters, filterFunc);
+		initFilters(filterWrapper, filterFunc);
 
 		table.appendChild(thead);
 		table.appendChild(tbody);

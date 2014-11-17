@@ -168,7 +168,7 @@ var heroTable = (function() {
 {name: "Maid Mary", grade: 5, type: types.hybrid, area: areas.guards, att: 340, def: 224, hp: 804, dex: 18, skills: [{name: "So Dusty!", cooldown: 66, damage: 180, effect: "blind", turns: 2}, {name: "Quick Cleaning", cooldown: 60, effect: "cleanse", heal: "25%"}]},
 {name: "Maid Emma", grade: 6, type: types.support, area: areas.guards, att: 319, def: 237, hp: 807, dex: 20, skills: [{name: "Fully Ready", cooldown: 72, effect: "dex", negative: true, amount: 60, turns: 2, aoe: true}, {name: "Quick Cleaning", cooldown: 54, effect: "cleanse", heal: "30%"}]},
 
-{name: "Bignose Jr.", grade: 6, type: types.hybrid, area: areas.reinforce, att: 400, def: 264, hp: 898, dex: 24, skills: [{name: "Overheated Snot", cooldown: 85, damage: 380, drain: 15}, {name: "Tornado", cooldown: 96, effect: "evade", amount: 80, turns: 2, aoe: true}]},
+{name: "Bignose Jr.", grade: 6, type: types.hybrid, area: areas.reinforce, att: 400, def: 264, hp: 898, dex: 24, skills: [{name: "Overheated Snot", cooldown: 85, damage: 380, sacrifice: 15}, {name: "Tornado", cooldown: 96, effect: "evade", amount: 80, turns: 2, aoe: true}]},
 {name: "Swordmaiden Mina", grade: 4, type: types.dealer, area: areas.reinforce, att: 335, def: 120, hp: 460, dex: 22, skills: [{name: "Crescent Blade", cooldown: 70, damage: 105, turns: 2}, {name: "Moon Makeup!", cooldown: 84, effect: "att", amount: 25, turns: 2, aoe: true}]},
 {name: "Swordmaiden Lilly", grade: 5, type: types.dealer, area: areas.reinforce, att: 407, def: 157, hp: 562, dex: 25, skills: [{name: "Name of Justice", cooldown: 60, damage: 180}, {name: "Moonlight Fall", cooldown: 84, damage: 55, turns: 2, aoe: true}]},
 {name: "Swordmaiden Yui", grade: 6, type: types.dealer, area: areas.reinforce, att: 479, def: 197, hp: 673, dex: 27, skills: [{name: "Name of Justice", cooldown: 62, damage: 195}, {name: "Moon Makeup!", cooldown: 84, effect: "att", amount: 35, turns: 2, aoe: true}]},
@@ -477,7 +477,7 @@ var heroTable = (function() {
 {name: "Amazing Diana", grade: 4, type: types.dealer, area: areas.city, att: 405, def: 138, hp: 531, dex: 15, skills: [{name: "Tell Me the Truth!", cooldown: 78, damage: 140, effect: "silence", turns: 2}, {name: "Your Sister's Here!", cooldown: 84, effect: "dex", amount: 12, turns: 3, back: true, points: true}]},
 {name: "Amazing Lexy", grade: 5, type: types.dealer, area: areas.city, att: 492, def: 168, hp: 603, dex: 17, skills: [{name: "Half-moon Kick", cooldown: 84, damage: 160, effect: "stun", turns: 2}, {name: "Your Sister's Here!", cooldown: 84, effect: "dex", amount: 15, turns: 3, back: true, points: true}]},
 {name: "Amazing Linda", grade: 6, type: types.dealer, area: areas.city, att: 579, def: 197, hp: 673, dex: 19, skills: [{name: "Hell on Earth", cooldown: 72, damage: 180, effect: "confuse", turns: 3}, {name: "Your Sister's Here!", cooldown: 102, effect: "dex", amount: 20, turns: 4, back: true, points: true}]},
-{name: "Heart Fire", grade: 4, type: types.hybrid, area: areas.city, att: 259, def: 172, hp: 659, dex: 14, skills: [{name: "Missile Drop Kick", cooldown: 90, damage: 220, drain: 20}, {name: "Showmanship", cooldown: 84, effect: "counter", amount: 70, turns: 2, front: true}]},
+{name: "Heart Fire", grade: 4, type: types.hybrid, area: areas.city, att: 259, def: 172, hp: 659, dex: 14, skills: [{name: "Missile Drop Kick", cooldown: 90, damage: 220, sacrifice: 20}, {name: "Showmanship", cooldown: 84, effect: "counter", amount: 70, turns: 2, front: true}]},
 {name: "Stone Ice", grade: 5, type: types.hybrid, area: areas.city, att: 340, def: 224, hp: 804, dex: 18, skills: [{name: "Ring Breaker!", cooldown: 74, damage: 70, aoe: true}, {name: "Noogie!", cooldown: 90, damage: 180, effect: "confuse", turns: 2}]},
 {name: "Fantastic Show", grade: 6, type: types.hybrid, area: areas.city, att: 383, def: 253, hp: 861, dex: 19, skills: [{name: "Super Missile Drop Kick", cooldown: 78, damage: 180, effect: "stun", turns: 2}, {name: "Super Noogie!", cooldown: 72, damage: 180, effect: "confuse", turns: 3}]},
 {name: "Mafia Sanchero", grade: 4, type: types.dealer, area: areas.city, att: 405, def: 138, hp: 531, dex: 15, skills: [{name: "Aimed Shot", cooldown: 60, damage: 170, effect: "blind", chance: 20, turns: 3}, {name: "Take This and Go", cooldown: 72, effect: "dex", amount: 50, turns: 3, aoe: true}]},
@@ -701,8 +701,8 @@ var heroTable = (function() {
 				s += " and restores " + skill.heal + " health";
 			}
 
-			if (skill.drain) {
-				s += " and drains " + skill.drain + "% health";
+			if (skill.sacrifice) {
+				s += " and sacrifices " + skill.sacrifice + "% health";
 			}
 
 			return s;

@@ -636,9 +636,12 @@ var heroTable = (function() {
 		};
 
 		var updateTable = function() {
+			var parent = table.parentNode;
+			parent.removeChild(table);
 			array.forEach(function(hero) {
 				table.appendChild(hero.row);
 			});
+			parent.appendChild(table);
 		};
 
 		var listener = function(e) {

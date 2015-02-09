@@ -513,7 +513,9 @@ var heroTable = (function() {
 {name: "Arcto", grade: 4, type: types.tank, area: areas.event, att: 195, def: 221, hp: 851, dex: 16, skills: [{name: "Belly Bump!", cooldown: 68, damage: 100, turns: 2}, {name: "Forest Protector", cooldown: 60, effect: "def", amount: 50, turns: 2}]},
 {name: "Boni", grade: 3, type: types.support, area: areas.event, att: 175, def: 130, hp: 553, dex: 14, skills: [{name: "Friendship Healing", cooldown: 24, heal: 195}, {name: "Helping Hand", cooldown: 72, effect: "cleanse"}]},
 {name: "Arcto Guard", grade: 5, type: types.tank, area: areas.event, att: 237, def: 269, hp: 964, dex: 18, skills: [{name: "Forest Defender", cooldown: 84, effect: "provoke", turns: 2}, {name: "Forest's Blessing", cooldown: 36, heal: "15%", self: true, effect: "def", amount: 30, turns: 2}]},
-{name: "Warrior Boni", grade: 6, type: types.dealer, area: areas.event, att: 519, def: 211, hp: 718, dex: 10, skills: [{name: "Carrot Hammer", cooldown: 64, damage: 190}, {name: "Carrot Barrage", cooldown: 84, damage: 65, aoe: true, effect: "silence", chance: 7, turns: 2}]}
+{name: "Warrior Boni", grade: 6, type: types.dealer, area: areas.event, att: 519, def: 211, hp: 718, dex: 10, skills: [{name: "Carrot Hammer", cooldown: 64, damage: 190}, {name: "Carrot Barrage", cooldown: 84, damage: 65, aoe: true, effect: "silence", chance: 7, turns: 2}]},
+{name: "Little Calvin", grade: 4, type: types.dealer, area: areas.event, att: 363, def: 147, hp: 567, dex: 16, skills: [{name: "Sword of Blood", cooldown: 86, damage: 175, heal: "10%", self: true}, {name: "Family Glory", cooldown: 78, damage: 90, effect: "stun", turns: 2}]},
+{name: "Little Anna", grade: 4, type: types.hybrid, area: areas.event, att: 280, def: 185, hp: 710, dex: 16, skills: [{name: "So Dusty!", cooldown: 66, damage: 160, effect: "blind", turns: 2}, {name: "Quick Cleaning", cooldown: 66, effect: "cleanse", heal: "25%"}]}
 ];
 
 	var createElement = function(element, attributes, innerHtml, parent) {
